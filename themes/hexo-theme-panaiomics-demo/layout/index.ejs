@@ -499,14 +499,16 @@
         </div>
         <div class="text-end">
           <p class="mb-0">报告编号: <strong><%= site.data.report && site.data.report.id ? site.data.report.id : '' %></strong></p>
-          <p class="small text-muted mb-0">生成日期: 
-            <span>
-  <%= site.data.report && site.data.report.report_date 
-    ? site.data.report.report_date.split('T')[0] 
-    : new Date().toISOString().slice(0, 10) %>
-</span>
+            <%
+              const reportDate = site.data.report && site.data.report.report_date;
+              const formattedDate = reportDate
+                ? (typeof reportDate === 'string'
+                    ? reportDate.split('T')[0]
+                    : new Date(reportDate).toISOString().slice(0, 10))
+                : new Date().toISOString().slice(0, 10);
+            %>
 
-        | 审核人员: 
+              生成日期: <span><%= formattedDate %></span>| 审核人员: 
         <span>
           <%= site.data.report && site.data.report.reviewer_id ? site.data.report.reviewer_id : '' %>
         </span>
