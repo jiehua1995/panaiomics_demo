@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="author" content="智绘组学PanAIOmics">
+  <meta name="description" content="智绘组学PanAiOmics多组学整合健康报告演示版">
+  <meta name="keywords" content="PanAiOmics, 评估报告, 多组学, 组学分析">
+
+  <title>PanAiOmics健康报告 - 演示版</title>
+  <!-- 引入Bootstrap样式 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- 引入Font Awesome图标库 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- 引入Alpine.js -->
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+  <!-- 引入SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    :root {
+      --primary-color: #2c3e50;
+      --secondary-color: #3498db;
+      --accent-color: #e74c3c;
+      --light-bg: #f8f9fa;
+      --dark-bg: #343a40;
+      --border-radius: 10px;
+    }
+    
+    body {
+      background-color: #f0f2f5;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+    }
+    
+    .report-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .report-header {
+      background: linear-gradient(10deg, rgba(44, 62, 80, 0.85), rgba(52, 152, 219, 0.85));
+      color: white;
+      padding: 20px;
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 25px;
+    }
+    
+    .report-section {
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      padding: 25px;
+      margin-bottom: 25px;
+    }
+    
+    .section-title {
+      border-bottom: 2px solid var(--secondary-color);
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+    
+    .qrcode {
+      width: 80px;
+      height: 80px;
+      border-radius: 5px;
+    }
+    
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    
+    /* 响应式布局调整 */
+    @media (max-width: 992px) {
+      .info-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .info-item[style*="grid-column: span 2"] {
+        grid-column: span 3 !important;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+      .info-item[style*="grid-column: span 2"] {
+        grid-column: span 1 !important;
+      }
+    }
+    
+    .info-item {
+      border-left: 3px solid var(--secondary-color);
+      padding-left: 10px;
+      grid-column: span 1; /* 默认占一列 */
+    }
+    
+      .info-label {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 2px;
+    }
+    
+    .info-value {
+      font-weight: 500;
+      color: white;
+    }    .risk-indicator {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      margin-right: 12px;
+      font-size: 0.85rem;
+      transition: all 0.3s ease;
+    }
+    
+    .risk-indicator:hover {
+      transform: scale(1.1);
+    }
+    
+    .risk-very-low {
+      background-color: #2ecc71;
+      box-shadow: 0 2px 5px rgba(46, 204, 113, 0.3);
+      animation: pulse-green 2s infinite;
+    }
+    
+    .risk-low {
+      background-color: #27ae60;
+      box-shadow: 0 2px 5px rgba(39, 174, 96, 0.3);
+      animation: pulse-green 2s infinite;
+    }
+    
+    .risk-medium {
+      background-color: #f39c12;
+      color: white;
+      box-shadow: 0 2px 5px rgba(243, 156, 18, 0.3);
+      animation: pulse-yellow 2s infinite;
+    }
+    
+    .risk-high {
+      background-color: #e74c3c;
+      box-shadow: 0 2px 5px rgba(231, 76, 60, 0.3);
+      animation: pulse-red 2s infinite;
+    }
+    
+    .risk-very-high {
+      background-color: #c0392b;
+      box-shadow: 0 2px 5px rgba(192, 57, 43, 0.3);
+      animation: pulse-red 2s infinite;
+    }
+    
+    @keyframes pulse-green {
+      0% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.4); }
+      70% { box-shadow: 0 0 0 5px rgba(39, 174, 96, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0); }
+    }
+    
+    @keyframes pulse-yellow {
+      0% { box-shadow: 0 0 0 0 rgba(243, 156, 18, 0.4); }
+      70% { box-shadow: 0 0 0 6px rgba(243, 156, 18, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(243, 156, 18, 0); }
+    }
+    
+    @keyframes pulse-red {
+      0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4); }
+      70% { box-shadow: 0 0 0 7px rgba(231, 76, 60, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+    }
+    
+    .detail-card {
+      border: none;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      margin-bottom: 15px;
+      border-radius: var(--border-radius);
+    }
+    
+    .evidence-section {
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-radius: var(--border-radius);
+      margin-top: 15px;
+      font-size: 0.9rem;
+    }
+    
+    .table-header {
+      background-color: #f0f2f5;
+      font-weight: 500;
+    }
+    
+    .gene-badge {
+      background-color: #e9ecef;
+      border-radius: 15px;
+      padding: 2px 8px;
+      font-size: 0.8rem;
+      margin-right: 5px;
+      margin-bottom: 5px;
+      display: inline-block;
+      color: #495057;
+    }
+    
+    .footer {
+      text-align: center;
+      padding: 20px;
+      color: #6c757d;
+      font-size: 0.9rem;
+    }
+    
+    .logo-placeholder {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #3498db, #2980b9);
+      border-radius: 12px; /* 稍微增加圆角半径以保持比例 */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 24px; /* 增加字体大小以配合更大的容器 */
+      overflow: hidden; /* 确保内容不超出边界 */
+    }
+    
+    .company-logo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* 确保图片适当缩放并填充整个区域 */
+      border-radius: 10px; /* 与容器保持一致的圆角 */
+    }
+    
+    /* 加载动画 */
+    .loading-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 400px;
+    }
+    
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(0, 0, 0, 0.1);
+      border-radius: 50%;
+      border-top-color: var(--secondary-color);
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* 制表符间隔 */
+    .tab-spacer {
+      display: inline-block;
+      width: 2em;
+      min-width: 2em;
+    }
+    
+    /* 祖源分析样式 */
+    #ancestry-section .progress {
+      border-radius: 10px;
+      background-color: rgba(0,0,0,0.05);
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+    }
+    
+    #ancestry-section .progress-bar {
+      border-radius: 10px;
+      transition: width 1s ease-in-out;
+    }
+    
+    .ancestry-color-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    
+    .ancestry-subgroup-icon {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: #2ecc71;
+    }
+    
+    .bg-gradient-primary {
+      background: linear-gradient(135deg, #3498db, #1a5276);
+    }
+    
+    .bg-gradient-success {
+      background: linear-gradient(135deg, #2ecc71, #1d8348);
+    }
+    
+    .ancestry-world-map {
+      height: 0;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    /* 基本样式 */
+    .card {
+      border: 1px solid #ddd;
+    }
+    
+    .detail-card {
+      margin-bottom: 10mm;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    table td, table th {
+      padding: 4pt;
+      border: 0.5pt solid #ddd;
+    }
+  </style>
+</head>
+<body>
+  <!-- 主应用容器 -->
+  <div x-data="reportApp()" x-init="loadData()" class="report-container">
+    
+    <!-- 顶部工具栏 -->
+    <div class="alert alert-secondary d-flex justify-content-between align-items-center mb-4">
+      <span>
+        <i class="fas fa-info-circle"></i> 
+        智绘组学PanAiOmics多组学整合健康报告演示版
+      </span>
+      <div>
+        <button @click="loadData()" class="btn btn-sm btn-outline-primary" x-bind:disabled="loading">
+          <i class="fas fa-sync" x-bind:class="{'fa-spin': loading}"></i>
+          <span x-text="loading ? '加载中...' : '重新加载'"></span>
+        </button>
+      </div>
+    </div>
+    
+    <!-- 加载指示器 -->
+    <div x-show="loading" class="loading-container">
+      <div class="text-center">
+        <div class="loading-spinner mb-3"></div>
+        <p class="text-secondary">正在加载基因组数据，请稍候...</p>
+      </div>
+    </div>
+    
+    <!-- 错误提示 -->
+    <div x-show="error && !loading" class="alert alert-danger">
+      <i class="fas fa-exclamation-triangle me-2"></i>
+      <strong>加载失败:</strong>
+      <span x-text="error"></span>
+      <button @click="loadData()" class="btn btn-sm btn-danger ms-3">重试</button>
+    </div>
+    
+    <!-- 报告内容 - 仅在数据加载成功后显示 -->
+    <div x-show="jsonData && !loading && !error">
+      
+      <!-- 报告头部 -->
+      <div class="report-header">
+        <div class="row align-items-center">
+          <div class="col-md-6">
+            <div class="d-flex align-items-center">
+              <div class="logo-placeholder me-3">
+                <img src="logo.png" alt="公司Logo" class="company-logo" onerror="this.style.display='none';this.parentNode.textContent=this.parentNode.parentElement.querySelector('h1').textContent.substring(0,2);" />
+              </div>
+              <div>
+                <h1 class="mb-0 fs-2 fw-bold" x-text="jsonData.company.name"></h1>
+                <h2 class="fs-5 fw-light mb-0">多组学健康评估报告</h2>
+                <p class="mb-0 mt-1 small text-light">Multi-Omics Health Report</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 text-md-end mt-3 mt-md-0">
+            <div class="d-flex flex-column align-items-md-end">
+              <div class="mb-2">
+                <canvas id="barcode" width="200" height="50"></canvas>
+              </div>
+              <div class="d-flex align-items-center justify-content-md-end">
+                <span class="me-2 small text-white">报告编号: <span x-text="jsonData.report.id"></span></span>
+                <div id="qrcode" class="qrcode"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row mt-4">
+          <div class="col-12">
+            <div class="info-grid">
+              <div class="info-item">
+                <div class="info-label fw-bold">取样日期</div>
+                <div class="info-value" x-text="jsonData.report.sample_date"></div>
+              </div>
+              <div class="info-item">
+                <div class="info-label fw-bold">检测完成日期</div>
+                <div class="info-value" x-text="jsonData.report.test_complete_date"></div>
+              </div>
+              <div class="info-item">
+                <div class="info-label fw-bold">复核员编号</div>
+                <div class="info-value" x-text="jsonData.report.reviewer_id"></div>
+              </div>
+              <div class="info-item">
+                <div class="info-label fw-bold">参考基因组版本</div>
+                <div class="info-value" x-text="jsonData.report.reference_genome"></div>
+              </div>
+              <div class="info-item" style="grid-column: span 2;">
+                <div class="info-label fw-bold">检测平台</div>
+                <div class="info-value" x-text="jsonData.report.test_platform"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 患者信息部分 -->
+      <div class="report-section" id="patient-section">
+        <h3 class="section-title">
+          <i class="fas fa-user me-2"></i> 受检者信息
+        </h3>
+        
+        <div class="row">
+          <div class="col-md-3">
+            <div class="card detail-card h-100">
+              <div class="card-body">
+                <h5 class="card-title fs-6 text-secondary">基本信息</h5>
+                <h4 class="mb-3" x-text="jsonData.patient.name"></h4>
+                <div class="mb-2">
+                  <span class="text-muted">编号:</span>
+                  <span class="ms-2" x-text="jsonData.patient.id"></span>
+                </div>
+                <div class="mb-2">
+                  <span class="text-muted">年龄:</span>
+                  <span class="ms-2" x-text="jsonData.patient.age + '岁'"></span>
+                </div>
+                <div class="mb-2">
+                  <span class="text-muted">性别:</span>
+                  <span class="ms-2" x-text="jsonData.patient.sex"></span>
+                  <span class="badge bg-secondary ms-1" x-text="jsonData.patient.sex_chromosome"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-9">
+            <div class="card detail-card h-100">
+              <div class="card-body">
+                <h5 class="card-title fs-6 text-secondary">健康概览</h5>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <h6 class="mb-1">身体质量指数 (BMI)</h6>
+                      <div class="d-flex align-items-center">
+                        <span class="fs-4 fw-bold" x-text="jsonData.patient.health_metrics.bmi"></span>
+                        <span class="ms-2 badge bg-success" x-text="jsonData.patient.health_metrics.bmi_status"></span>
+                      </div>
+                      <small class="text-muted">18.5-24.9为正常范围</small>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <h6 class="mb-1">检测类型</h6>
+                      <div class="d-flex flex-wrap">
+                        <template x-for="(type, index) in jsonData.patient.test_types" :key="index">
+                          <span class="badge me-2 mb-2" :class="{
+                            'bg-primary': index === 0,
+                            'bg-info': index === 1,
+                            'bg-secondary': index >= 2
+                          }" x-text="type"></span>
+                        </template>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 祖源分析部分 -->
+      <div class="report-section" id="ancestry-section">
+        <h3 class="section-title">
+          <i class="fas fa-dna me-2"></i> 祖源分析
+        </h3>
+        
+        <div class="alert alert-info mb-4">
+          <div class="d-flex">
+            <div class="me-3">
+              <i class="fas fa-globe-asia fa-2x"></i>
+            </div>
+            <div>
+              <h5 class="alert-heading">您的基因组起源</h5>
+              <p class="mb-0">祖源分析利用基因组中的特征变异位点，将您的基因组与全球参考人群数据库进行比较，确定您的遗传祖源构成。这些信息可用于了解您的历史迁徙背景，但不代表您的文化身份认同。</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="ancestry-world-map mb-4">
+          <!-- 这里可以放世界地图背景图 -->
+        </div>
+        
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <div class="card detail-card h-100">
+              <div class="card-header bg-gradient-primary text-white">
+                <div class="d-flex align-items-center">
+                  <i class="fas fa-globe me-2"></i>
+                  <h6 class="mb-0">全球主要人群祖源</h6>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-sm table-hover">
+                    <thead class="table-light">
+                      <tr>
+                        <th>人群</th>
+                        <th>比例</th>
+                        <th>可视化</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <template x-for="(group, index) in jsonData.ancestry.major_groups" :key="index">
+                        <tr>
+                          <td>
+                            <div class="d-flex align-items-center">
+                              <div class="ancestry-color-dot me-2" :style="'background-color: ' + getAncestryColor(index)"></div>
+                              <span x-text="group.name"></span>
+                            </div>
+                          </td>
+                          <td class="fw-bold" x-text="group.percentage.toFixed(2) + '%'"></td>
+                          <td>
+                            <div class="progress" style="height: 12px;">
+                              <div class="progress-bar" role="progressbar" 
+                                   :style="'width: ' + group.percentage + '%; background-color: ' + getAncestryColor(index)" 
+                                   :aria-valuenow="group.percentage" 
+                                   aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                          </td>
+                        </tr>
+                      </template>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-6">
+            <div class="card detail-card h-100">
+              <div class="card-header bg-gradient-success text-white">
+                <div class="d-flex align-items-center">
+                  <i class="fas fa-map-marked-alt me-2"></i>
+                  <h6 class="mb-0">区域细分分析</h6>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-sm table-hover">
+                    <thead class="table-light">
+                      <tr>
+                        <th>民族</th>
+                        <th>比例</th>
+                        <th>可视化</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <template x-for="(group, index) in jsonData.ancestry.subgroups" :key="index">
+                        <tr>
+                          <td>
+                            <div class="d-flex align-items-center">
+                              <div class="ancestry-subgroup-icon me-2">
+                                <i class="fas fa-users"></i>
+                              </div>
+                              <span x-text="group.name"></span>
+                            </div>
+                          </td>
+                          <td class="fw-bold" x-text="group.percentage.toFixed(2) + '%'"></td>
+                          <td>
+                            <div class="progress" style="height: 12px;">
+                              <div class="progress-bar bg-success" role="progressbar" 
+                                   :style="'width: ' + group.percentage + '%; opacity: ' + (0.6 + index * 0.1)" 
+                                   :aria-valuenow="group.percentage" 
+                                   aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                          </td>
+                        </tr>
+                      </template>
+                    </tbody>
+                  </table>
+                </div>
+                
+                <div class="mt-3 small bg-light p-2 rounded">
+                  <i class="fas fa-lightbulb me-1 text-warning"></i>
+                  <span x-text="jsonData.ancestry.notes"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 疾病风险评估部分 -->
+      <div class="report-section" id="risk-assessment-section">
+        <h3 class="section-title">
+          <i class="fas fa-chart-line me-2"></i> 疾病风险评估与早期筛查
+        </h3>
+        
+        <div class="alert alert-info mb-4">
+          <div class="d-flex">
+            <div class="me-3">
+              <i class="fas fa-info-circle fa-2x"></i>
+            </div>
+            <div>
+              <h5 class="alert-heading">关于风险评估</h5>
+              <p class="mb-0">本报告结合基因组学和蛋白质组学数据，为您提供疾病易感性和风险评估结果。基因组数据反映终身遗传易感性（从"极不易感"到"高度易感"），蛋白质组数据反映当前健康风险（从"低风险"到"高风险"）。请点击"查看详情"了解更多科学依据和预防建议。</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 疾病风险列表 -->
+        <template x-for="(disease, index) in jsonData.diseases" :key="disease.id">
+          <div class="card detail-card mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center py-3">
+              <div>
+                <span class="badge" 
+                      :class="{
+                        'bg-success': disease.genomic.risk_score < 0.3,
+                        'bg-warning': disease.genomic.risk_score >= 0.3 && disease.genomic.risk_score < 0.7,
+                        'bg-danger': disease.genomic.risk_score >= 0.7
+                      }"
+                      x-text="disease.info.category"></span>
+                <span class="ms-2 fw-bold fs-5" x-text="disease.info.name"></span>
+              </div>
+              <button class="btn btn-primary" 
+                      @click="toggleDetails(disease.id)"
+                      x-text="isExpanded(disease.id) ? '收起详情' : '查看详情'"></button>
+            </div>
+            
+            <div class="card-body" x-show="isExpanded(disease.id)" x-transition>
+              <p class="mb-3" x-text="disease.info.definition"></p>
+              
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <div class="card">
+                    <div class="card-header py-2 table-header">
+                      <div class="d-flex align-items-center">
+                        <div class="risk-indicator"
+                             @click="showRiskLevelTooltip('genomic', disease.genomic.risk_score)"
+                             style="cursor: pointer;"
+                             :class="{
+                               'risk-very-low': disease.genomic.risk_score < 0.2,
+                               'risk-low': disease.genomic.risk_score >= 0.2 && disease.genomic.risk_score < 0.4,
+                               'risk-medium': disease.genomic.risk_score >= 0.4 && disease.genomic.risk_score < 0.6,
+                               'risk-high': disease.genomic.risk_score >= 0.6 && disease.genomic.risk_score < 0.8,
+                               'risk-very-high': disease.genomic.risk_score >= 0.8
+                             }" 
+                             :title="'点击查看风险级别说明'">
+                          <i class="fas"
+                             :class="{
+                               'fa-smile': disease.genomic.risk_score < 0.2,
+                               'fa-check': disease.genomic.risk_score >= 0.2 && disease.genomic.risk_score < 0.4,
+                               'fa-equals': disease.genomic.risk_score >= 0.4 && disease.genomic.risk_score < 0.6,
+                               'fa-exclamation': disease.genomic.risk_score >= 0.6 && disease.genomic.risk_score < 0.8,
+                               'fa-exclamation-triangle': disease.genomic.risk_score >= 0.8
+                             }"></i>
+                        </div>
+                        <span class="fw-bold">基因组易感性评估</span>
+                        <span class="ms-auto" x-text="getGenomicSusceptibility(disease.genomic.risk_score)"></span>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <h6 class="card-subtitle mb-2 text-muted">科学依据</h6>
+                      <p class="card-text" x-text="disease.genomic.evidence"></p>
+                      
+                      <h6 class="card-subtitle mb-2 text-muted">相关基因变异</h6>
+                      <div class="d-flex flex-wrap mb-3">
+                        <template x-for="gene in disease.genomic.genes" :key="gene.name">
+                          <a :href="'https://www.ncbi.nlm.nih.gov/gene/' + gene.id" target="_blank" class="gene-badge text-decoration-none">
+                            <span x-text="gene.name"></span>
+                            <span class="ms-1 small" x-text="gene.variant"></span>
+                          </a>
+                        </template>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="col-md-6">
+                  <div class="card">
+                    <div class="card-header py-2 table-header">
+                      <div class="d-flex align-items-center">
+                        <div class="risk-indicator"
+                             @click="showRiskLevelTooltip('proteomic', disease.proteomic.risk_score)"
+                             style="cursor: pointer;"
+                             :class="{
+                               'risk-very-low': disease.proteomic.risk_score < 0.2,
+                               'risk-low': disease.proteomic.risk_score >= 0.2 && disease.proteomic.risk_score < 0.4,
+                               'risk-medium': disease.proteomic.risk_score >= 0.4 && disease.proteomic.risk_score < 0.6,
+                               'risk-high': disease.proteomic.risk_score >= 0.6 && disease.proteomic.risk_score < 0.8,
+                               'risk-very-high': disease.proteomic.risk_score >= 0.8
+                             }"
+                             :title="'点击查看风险级别说明'">
+                          <i class="fas"
+                             :class="{
+                               'fa-thumbs-up': disease.proteomic.risk_score < 0.2,
+                               'fa-check': disease.proteomic.risk_score >= 0.2 && disease.proteomic.risk_score < 0.4,
+                               'fa-equals': disease.proteomic.risk_score >= 0.4 && disease.proteomic.risk_score < 0.6,
+                               'fa-exclamation': disease.proteomic.risk_score >= 0.6 && disease.proteomic.risk_score < 0.8,
+                               'fa-exclamation-triangle': disease.proteomic.risk_score >= 0.8
+                             }"></i>
+                        </div>
+                        <span class="fw-bold">蛋白质组风险评估</span>
+                        <span class="ms-auto" x-text="getProteomicRisk(disease.proteomic.risk_score)"></span>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <h6 class="card-subtitle mb-2 text-muted">检测结果</h6>
+                      <p class="card-text" x-text="disease.proteomic.evidence"></p>
+                      
+                      <h6 class="card-subtitle mb-2 text-muted">相关蛋白标志物</h6>
+                      <table class="table table-sm">
+                        <thead>
+                          <tr>
+                            <th>蛋白质</th>
+                            <th>变化情况</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <template x-for="protein in disease.proteomic.proteins" :key="protein.name">
+                            <tr>
+                              <td>
+                                <a :href="'https://www.uniprot.org/uniprot/' + protein.id" target="_blank" class="text-decoration-none">
+                                  <span x-text="protein.name"></span>
+                                </a>
+                              </td>
+                              <td>
+                                <span :class="{
+                                  'text-danger': protein.change.includes('升高'),
+                                  'text-success': protein.change.includes('正常'),
+                                  'text-warning': protein.change.includes('轻度') || (!protein.change.includes('升高') && !protein.change.includes('正常'))
+                                }" x-text="protein.change"></span>
+                              </td>
+                            </tr>
+                          </template>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="evidence-section">
+                <h5 class="mb-3">
+                  <i class="fas fa-stethoscope me-2"></i> 医疗建议
+                </h5>
+                <p class="mb-0" x-text="disease.recommendation"></p>
+              </div>
+            </div>
+            
+            <div class="card-body" x-show="!isExpanded(disease.id)">
+              <div class="row">
+                <div class="col-md-3">
+                  <div class="d-flex align-items-center mb-2">
+                    <div class="risk-indicator"
+                         :class="{
+                           'risk-very-low': disease.genomic.risk_score < 0.2,
+                           'risk-low': disease.genomic.risk_score >= 0.2 && disease.genomic.risk_score < 0.4,
+                           'risk-medium': disease.genomic.risk_score >= 0.4 && disease.genomic.risk_score < 0.6,
+                           'risk-high': disease.genomic.risk_score >= 0.6 && disease.genomic.risk_score < 0.8,
+                           'risk-very-high': disease.genomic.risk_score >= 0.8
+                         }">
+                      <i class="fas"
+                         :class="{
+                           'fa-smile': disease.genomic.risk_score < 0.2,
+                           'fa-check': disease.genomic.risk_score >= 0.2 && disease.genomic.risk_score < 0.4,
+                           'fa-equals': disease.genomic.risk_score >= 0.4 && disease.genomic.risk_score < 0.6,
+                           'fa-exclamation': disease.genomic.risk_score >= 0.6 && disease.genomic.risk_score < 0.8,
+                           'fa-exclamation-triangle': disease.genomic.risk_score >= 0.8
+                         }"></i>
+                    </div>
+                    <span class="fw-bold">基因组易感性:</span>
+                    <span class="ms-2" x-text="getGenomicSusceptibility(disease.genomic.risk_score)"></span>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="d-flex align-items-center mb-2">
+                    <div class="risk-indicator"
+                         :class="{
+                           'risk-very-low': disease.proteomic.risk_score < 0.2,
+                           'risk-low': disease.proteomic.risk_score >= 0.2 && disease.proteomic.risk_score < 0.4,
+                           'risk-medium': disease.proteomic.risk_score >= 0.4 && disease.proteomic.risk_score < 0.6,
+                           'risk-high': disease.proteomic.risk_score >= 0.6 && disease.proteomic.risk_score < 0.8,
+                           'risk-very-high': disease.proteomic.risk_score >= 0.8
+                         }">
+                      <i class="fas"
+                         :class="{
+                           'fa-thumbs-up': disease.proteomic.risk_score < 0.2,
+                           'fa-check': disease.proteomic.risk_score >= 0.2 && disease.proteomic.risk_score < 0.4,
+                           'fa-equals': disease.proteomic.risk_score >= 0.4 && disease.proteomic.risk_score < 0.6,
+                           'fa-exclamation': disease.proteomic.risk_score >= 0.6 && disease.proteomic.risk_score < 0.8,
+                           'fa-exclamation-triangle': disease.proteomic.risk_score >= 0.8
+                         }"></i>
+                    </div>
+                    <span class="fw-bold">蛋白质组风险:</span>
+                    <span class="ms-2" x-text="getProteomicRisk(disease.proteomic.risk_score)"></span>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="d-flex align-items-center mb-2">
+                    <i class="fas fa-dna me-2 text-secondary"></i>
+                    <span class="fw-bold">相关基因:</span>
+                    <span class="ms-2">
+                      <template x-for="(gene, i) in disease.genomic.genes" :key="gene.name">
+                        <span>
+                          <span x-text="gene.name"></span><span x-show="i < disease.genomic.genes.length - 1">, </span>
+                        </span>
+                      </template>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </template>
+        
+        <div class="alert alert-warning mt-4">
+          <i class="fas fa-exclamation-triangle me-2"></i>
+          <span>风险评估仅供参考，不能替代专业医疗诊断。如有健康问题，请咨询医疗专业人士。基因组数据反映的是遗传易感性，蛋白质组反映的是当前健康状态风险水平。</span>
+        </div>
+      </div>
+      
+      <!-- 药物基因组学分析部分 -->
+      <div class="report-section" id="medication-section">
+        <h3 class="section-title">
+          <i class="fas fa-pills me-2"></i> 药物基因组学分析
+        </h3>
+        
+        <div class="alert alert-info mb-4">
+          <div class="d-flex">
+            <div class="me-3">
+              <i class="fas fa-info-circle fa-2x"></i>
+            </div>
+            <div>
+              <h5 class="alert-heading">个体化用药指导</h5>
+              <p class="mb-0">药物基因组学分析基于个人基因型，评估药物代谢酶、转运体和靶点基因的变异，为个体化用药提供参考。请在医生指导下调整用药方案。</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 药物列表 -->
+        <div class="accordion" id="medicationAccordion">
+          <template x-for="(med, index) in jsonData.medications" :key="med.id">
+            <div class="accordion-item mb-3 border">
+              <h2 class="accordion-header" :id="'heading-' + med.id">
+                <button class="accordion-button fw-bold" type="button" 
+                        :class="{ 'collapsed': !isExpandedMed(med.id) }"
+                        @click="toggleMedDetails(med.id)" 
+                        :aria-expanded="isExpandedMed(med.id)"
+                        :aria-controls="'collapse-' + med.id">
+                  <span x-text="med.name"></span>
+                  <span class="badge bg-secondary ms-2" x-text="med.target_disease"></span>
+                </button>
+              </h2>
+              <div :id="'collapse-' + med.id" 
+                   class="accordion-collapse collapse" 
+                   :class="{ 'show': isExpandedMed(med.id) }"
+                   :aria-labelledby="'heading-' + med.id">
+                <div class="accordion-body">
+                  <div class="mb-3">
+                    <div class="d-flex">
+                      <strong class="me-3">适应症/靶向疾病:</strong>
+                      <span class="tab-spacer"></span>
+                      <span x-text="med.target_disease"></span>
+                    </div>
+                  </div>
+                  
+                  <div class="mb-3">
+                    <div class="d-flex align-items-center">
+                      <strong class="me-3">相关基因:</strong>
+                      <span class="tab-spacer"></span>
+                      <div class="d-flex flex-wrap">
+                        <template x-for="gene in med.related_genes" :key="gene.name">
+                          <a href="#" class="gene-badge text-decoration-none me-2 mb-2" @click.prevent="showGeneInfo(gene)">
+                            <span x-text="gene.name"></span>
+                            <span class="small ms-1" x-text="gene.variant"></span>
+                            <span class="small ms-1 text-muted" x-text="'(' + gene.phenotype + ')'"></span>
+                          </a>
+                        </template>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <div class="d-flex">
+                      <strong class="me-3">用药建议:</strong>
+                      <span class="tab-spacer"></span>
+                      <span x-text="med.advice"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </template>
+        </div>
+        
+        <div class="alert alert-warning mt-4">
+          <i class="fas fa-exclamation-triangle me-2"></i>
+          <span>以上用药建议仅基于基因组分析结果，实际用药需结合临床症状、既往用药史和其他检查结果，由医生综合评估决定。请勿自行调整药物剂量或停药。</span>
+        </div>
+      </div>
+      
+      <!-- 报告页脚 -->
+      <div class="report-section report-footer" id="report-footer-section">
+        <div class="mb-4">
+          <h3 class="section-title">
+            <i class="fas fa-exclamation-circle me-2"></i> 报告免责声明
+          </h3>
+          <div class="alert alert-warning">
+            <p>本基因组和蛋白质组健康报告由智绘组学提供，仅供健康评估和预防性参考。报告中的发现基于当前科学研究，但个体健康状况受多种因素影响。</p>
+            <p>请注意：</p>
+            <ul>
+              <li>本报告不能替代专业医疗建议、诊断或治疗</li>
+              <li>所有健康决策应在医疗专业人士指导下进行</li>
+              <li>基因和蛋白质分析反映特定时间点的信息，可能随时间变化</li>
+              <li>环境、生活方式和其他因素也会显著影响健康风险</li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="mb-3">
+          <h3 class="section-title">
+            <i class="fas fa-lightbulb me-2"></i> 后续建议
+          </h3>
+          <div class="alert alert-info">
+            <p>基于您的检测结果，我们建议：</p>
+            <ol>
+              <li>与您的医生分享此报告结果并讨论个性化预防策略</li>
+              <li>针对高风险项目，考虑进行定期筛查和随访</li>
+              <li>保持健康生活方式，包括均衡饮食、规律运动和充足休息</li>
+              <li>每6-12个月更新您的蛋白质组检测，监测健康变化</li>
+            </ol>
+          </div>
+        </div>
+        <hr>
+        
+        <div class="d-flex justify-content-between align-items-center mt-4">
+          <div>
+            <p class="mb-0"><strong x-text="jsonData.company.name"></strong></p>
+            <p class="small text-muted mb-0">版本 <span x-text="jsonData.company.version"></span></p>
+          </div>
+          <div class="text-end">
+            <p class="mb-0">报告编号: <strong x-text="jsonData.report.id"></strong></p>
+            <p class="small text-muted mb-0">生成日期: <span x-text="jsonData.report.report_date"></span> | 审核人员: <span x-text="jsonData.report.reviewer_id"></span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 引入JsBarcode和QRCode库 -->
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+  
+  <script>
+    function reportApp() {
+      return {
+        jsonData: null,
+        loading: true,
+        error: null,
+        expandedItems: {},
+        expandedMedItems: {},
+        
+        // 加载JSON数据
+        async loadData() {
+          this.loading = true;
+          this.error = null;
+          this.expandedItems = {};
+          this.expandedMedItems = {};
+          
+          try {
+            console.log('开始加载JSON数据...');
+            
+            // 使用fetch API获取数据
+            const response = await fetch('demo.json');
+            
+            if (!response.ok) {
+              throw new Error(`网络响应错误: ${response.status} ${response.statusText}`);
+            }
+            
+            // 解析JSON数据
+            this.jsonData = await response.json();
+            
+            // 确保logo路径正确
+            if (this.jsonData.company && this.jsonData.company.logo) {
+              // 如果logo是相对路径，添加正确的前缀
+              if (!this.jsonData.company.logo.startsWith('http') && 
+                  !this.jsonData.company.logo.startsWith('data:')) {
+                this.jsonData.company.logo = this.jsonData.company.logo;
+              }
+            }
+            
+            // 打印调试信息
+            console.log('数据加载成功', {
+              '患者信息': this.jsonData.patient,
+              '疾病数量': this.jsonData.diseases.length,
+              '药物数量': this.jsonData.medications.length,
+              '公司Logo': this.jsonData.company.logo
+            });
+            
+            // 生成条码和二维码
+            this.$nextTick(() => {
+              this.generateBarcodes();
+            });
+            
+          } catch (err) {
+            this.error = err.message;
+            console.error('数据加载错误:', err);
+          } finally {
+            this.loading = false;
+          }
+        },
+        
+        // 生成条码和二维码
+        generateBarcodes() {
+          // 生成一维码
+          const reportId = this.jsonData.report.id;
+          JsBarcode("#barcode", reportId, {
+            format: "CODE128",
+            lineColor: "#000",
+            width: 1.5,
+            height: 40,
+            displayValue: false
+          });
+          
+          // 生成报告二维码
+          const qrUrl = window.location.href;
+          QRCode.toCanvas(document.getElementById('qrcode'), qrUrl, {
+            width: 80,
+            margin: 1,
+            color: {
+              dark: "#000000",
+              light: "#ffffff"
+            }
+          }, function(error) {
+            if (error) console.error(error);
+          });
+          
+          // 已移除联系二维码部分
+        },
+        
+        // 获取祖源分析颜色
+        getAncestryColor(index) {
+          const colors = [
+            '#3498db', // 蓝色 - 东亚
+            '#e74c3c', // 红色 - 非洲
+            '#2ecc71', // 绿色 - 美洲
+            '#f39c12', // 橙色 - 南亚
+            '#9b59b6'  // 紫色 - 欧洲
+          ];
+          
+          return colors[index % colors.length];
+        },
+        
+        // 切换详情显示状态
+        toggleDetails(id) {
+          this.expandedItems[id] = !this.expandedItems[id];
+        },
+        
+        // 切换药物详情显示状态
+        toggleMedDetails(id) {
+          this.expandedMedItems[id] = !this.expandedMedItems[id];
+        },
+        
+        // 检查疾病是否展开
+        isExpanded(id) {
+          return this.expandedItems[id] || false;
+        },
+        
+        // 检查药物是否展开
+        isExpandedMed(id) {
+          return this.expandedMedItems[id] || false;
+        },
+        
+        // 获取基因组易感性分类
+        getGenomicSusceptibility(score) {
+          if (score < 0.2) return "极不易感";
+          if (score >= 0.2 && score < 0.4) return "不易感";
+          if (score >= 0.4 && score < 0.6) return "人群平均水平";
+          if (score >= 0.6 && score < 0.8) return "易感";
+          return "高度易感";
+        },
+        
+        // 获取蛋白质组风险分类
+        getProteomicRisk(score) {
+          if (score < 0.2) return "低风险";
+          if (score >= 0.2 && score < 0.4) return "中低风险";
+          if (score >= 0.4 && score < 0.6) return "人群平均水平";
+          if (score >= 0.6 && score < 0.8) return "中高风险";
+          return "高风险";
+        },
+        
+        // 显示风险级别提示
+        showRiskLevelTooltip(riskType, score) {
+          let title, description;
+          
+          if (riskType === 'genomic') {
+            title = this.getGenomicSusceptibility(score);
+            if (score < 0.2) {
+              description = "基因组分析显示您相对于普通人群极不易患此疾病。不过，生活方式和环境因素仍可能影响发病风险。";
+            } else if (score >= 0.2 && score < 0.4) {
+              description = "基因组分析显示您相对于普通人群不易患此疾病。建议保持健康的生活方式。";
+            } else if (score >= 0.4 && score < 0.6) {
+              description = "基因组分析显示您患此疾病的风险处于人群平均水平，建议关注相关预防措施。";
+            } else if (score >= 0.6 && score < 0.8) {
+              description = "基因组分析显示您患此疾病的风险高于人群平均水平，建议严格遵循预防建议。";
+            } else {
+              description = "基因组分析显示您患此疾病的风险显著高于人群平均水平，建议严格遵循预防建议并进行定期筛查。";
+            }
+          } else {
+            title = this.getProteomicRisk(score);
+            if (score < 0.2) {
+              description = "蛋白质组分析显示您目前的生物标志物处于极佳健康范围内，继续保持健康的生活方式。";
+            } else if (score >= 0.2 && score < 0.4) {
+              description = "蛋白质组分析显示您目前的生物标志物处于健康范围内，继续保持良好习惯。";
+            } else if (score >= 0.4 && score < 0.6) {
+              description = "蛋白质组分析显示相关标志物处于一般水平，建议保持健康生活方式。";
+            } else if (score >= 0.6 && score < 0.8) {
+              description = "蛋白质组分析显示一些相关标志物异常，建议密切关注并采取生活方式干预。";
+            } else {
+              description = "蛋白质组分析显示多个相关标志物明显异常，建议尽快咨询医生并进行进一步检查。";
+            }
+          }
+          
+          Swal.fire({
+            title: title,
+            html: description,
+            icon: score < 0.3 ? 'success' : (score >= 0.7 ? 'warning' : 'info'),
+            confirmButtonText: '了解了',
+            confirmButtonColor: '#3498db'
+          });
+        },
+        
+        // 显示基因信息弹窗
+        showGeneInfo(gene) {
+          const geneName = gene.name;
+          const variant = gene.variant;
+          
+          // 使用SweetAlert2显示美观的基因信息弹窗
+          Swal.fire({
+            title: `基因：${geneName}`,
+            html: `
+              <div class="text-start">
+                <p><strong>variant ID:</strong> ${variant}</p>
+                <p><strong>染色体位置:</strong> 根据基因不同而异</p>
+                <p><strong>功能:</strong> ${this.getGeneFunction(geneName)}</p>
+                <p><strong>相关疾病:</strong> ${this.getGeneDisease(geneName)}</p>
+                <p><strong>变异影响:</strong> ${this.getGeneEffect(geneName, variant)}</p>
+                <hr>
+                <p class="small text-muted">您可以通过以下链接了解更多信息：</p>
+                <a href="https://www.ncbi.nlm.nih.gov/gene/?term=${geneName}" target="_blank" class="btn btn-sm btn-outline-primary mt-2">
+                  <i class="fas fa-external-link-alt me-1"></i> NCBI Gene
+                </a>
+              </div>
+            `,
+            icon: 'info',
+            confirmButtonText: '关闭'
+          });
+        },
+        
+        // 获取基因功能描述
+        getGeneFunction(geneName) {
+          if (this.jsonData && this.jsonData.gene_info && this.jsonData.gene_info[geneName]) {
+            return this.jsonData.gene_info[geneName].function;
+          }
+          return '该基因参与重要的生物学过程，具体功能请咨询专业遗传咨询师。';
+        },
+        
+        // 获取基因相关疾病
+        getGeneDisease(geneName) {
+          if (this.jsonData && this.jsonData.gene_info && this.jsonData.gene_info[geneName]) {
+            return this.jsonData.gene_info[geneName].related_diseases;
+          }
+          return '多种复杂疾病';
+        },
+        
+        // 获取基因变异影响
+        getGeneEffect(geneName, variant) {
+          if (this.jsonData && this.jsonData.gene_info && this.jsonData.gene_info[geneName]) {
+            const gene = this.jsonData.gene_info[geneName];
+            if (gene.variants && gene.variants[variant]) {
+              return gene.variants[variant];
+            }
+          }
+          
+          // 检查其他基因是否有此变异信息
+          if (this.jsonData && this.jsonData.gene_info) {
+            for (const gName in this.jsonData.gene_info) {
+              const geneData = this.jsonData.gene_info[gName];
+              if (geneData.variants && geneData.variants[variant]) {
+                return geneData.variants[variant];
+              }
+            }
+          }
+          
+          return '该变异可能影响基因功能或表达，具体影响需结合临床情况评估。';
+          
+          const key = `${geneName}_${variant}`;
+          return geneEffects[key] || '该变异可能影响基因功能或表达，具体影响需结合临床情况评估。';
+        },
+        
+        // 显示蛋白质信息弹窗
+        showProteinInfo(protein) {
+          const proteinName = protein.name;
+          const change = protein.change;
+          
+          // 使用SweetAlert2显示美观的蛋白信息弹窗
+          Swal.fire({
+            title: `蛋白质：${proteinName}`,
+            html: `
+              <div class="text-start">
+                <p><strong>变化情况:</strong> <span class="${this.getProteinChangeColor(change)}">${change}</span></p>
+                <p><strong>生物学功能:</strong> ${this.getProteinFunction(proteinName)}</p>
+                <p><strong>临床意义:</strong> ${this.getProteinClinicalSignificance(proteinName, change)}</p>
+                <hr>
+                <p class="small text-muted">蛋白质组学检测结果仅反映检测时的状态，可能随时间变化。</p>
+              </div>
+            `,
+            icon: 'info',
+            confirmButtonText: '关闭'
+          });
+        },
+        
+        // 获取蛋白质变化颜色
+        getProteinChangeColor(change) {
+          if (change.includes('升高')) return 'text-danger';
+          if (change.includes('正常')) return 'text-success';
+          return 'text-warning';
+        },
+        
+        // 获取蛋白质功能
+        getProteinFunction(proteinName) {
+          if (this.jsonData && this.jsonData.protein_info && this.jsonData.protein_info[proteinName]) {
+            return this.jsonData.protein_info[proteinName].function;
+          }
+          return '该蛋白在人体内发挥重要的生理功能。';
+        },
+        
+        // 获取蛋白质临床意义
+        getProteinClinicalSignificance(proteinName, change) {
+          if (this.jsonData && this.jsonData.protein_info && this.jsonData.protein_info[proteinName]) {
+            const protein = this.jsonData.protein_info[proteinName];
+            // 检查是否有完全匹配的变化状态
+            if (protein.clinical_significance && protein.clinical_significance[change]) {
+              return protein.clinical_significance[change];
+            }
+            
+            // 如果没有完全匹配，尝试通过关键词匹配
+            if (change.includes('正常') && protein.clinical_significance.正常) {
+              return protein.clinical_significance.正常;
+            } else if (change.includes('升高') && protein.clinical_significance.升高) {
+              return protein.clinical_significance.升高;
+            } else if (change.includes('降低') && protein.clinical_significance.降低) {
+              return protein.clinical_significance.降低;
+            }
+          }
+          
+          // 默认返回
+          if (change.includes('正常')) {
+            return '该蛋白水平在正常范围内，表明相关生理功能正常。';
+          } else if (change.includes('升高')) {
+            return '该蛋白水平升高可能预示存在潜在的健康问题。';
+          } else {
+            return '该蛋白水平异常，建议结合临床症状和其他检查结果综合评估。';
+          }
+        }
+      };
+    }
+  </script>
+</body>
+</html>

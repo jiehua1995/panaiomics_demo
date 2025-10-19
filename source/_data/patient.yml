@@ -1,0 +1,12 @@
+name: 张明
+age: 35
+sex: 男
+sex_chromosome: XY
+id: PT-20250907-001
+health_metrics:
+  bmi: 23.4
+  bmi_status: 正常范围
+test_types:
+  - 三代测序全基因组测序
+  - 血浆蛋白质组DIA质谱分析
+  - 药物基因组学评估

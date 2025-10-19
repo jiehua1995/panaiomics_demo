@@ -1,0 +1,23 @@
+major_groups:
+  - name: 东亚 (EAS)
+    percentage: 94.40
+  - name: 非洲 (AFR)
+    percentage: 2.63
+  - name: 美洲 (AMR)
+    percentage: 1.93
+  - name: 南亚 (SAS)
+    percentage: 0.88
+  - name: 欧洲 (EUR)
+    percentage: 0.16
+
+subgroups:
+  - name: 汉族
+    percentage: 86.73
+  - name: 壮族
+    percentage: 5.42
+  - name: 苗族
+    percentage: 1.85
+  - name: 满族
+    percentage: 0.40
+
+notes: 祖源分析基于全基因组数据与参考人群的对比。

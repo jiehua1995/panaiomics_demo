@@ -1,0 +1,86 @@
+<div class="report-header">
+    <div class="row align-items-center">
+    <div class="col-md-6">
+        <div class="d-flex align-items-center">
+        <div class="logo-placeholder me-3">
+            <img src="<%- theme.site.logo %>" alt="公司Logo" class="company-logo" />
+        </div>
+        <div>
+            <h1 class="mb-0 fs-2 fw-bold"><%= site.data.company && site.data.company.name ? site.data.company.name : '' %></h1>
+            <h2 class="fs-5 fw-light mb-0">多组学健康评估报告</h2>
+            <p class="mb-0 mt-1 small text-light">Multi-Omics Health Report</p>
+        </div>
+        </div>
+    </div>
+    <div class="col-md-6 text-md-end mt-3 mt-md-0">
+        <div class="d-flex flex-column align-items-md-end">
+        <div class="mb-2">
+            <canvas id="barcode" width="200" height="50"></canvas>
+        </div>
+        <div class="d-flex align-items-center justify-content-md-end">
+            <span class="me-2 small text-white">报告编号: <span id="report-id"><%= site.data.report && site.data.report.id ? site.data.report.id : 'RPT2025080001' %></span></span>
+            <div id="qrcode" class="qrcode"></div>
+        </div>
+        </div>
+    </div>
+    </div>
+    
+    <div class="row mt-4">
+    <div class="col-12">
+        <div class="info-grid">
+        <div class="info-item">
+            <div class="info-label fw-bold">取样日期</div>
+            <div class="info-value">
+  <% 
+    let sampleDate = site.data.report && site.data.report.sample_date 
+      ? site.data.report.sample_date 
+      : '2025-08-30';
+
+    // 如果是 Date 对象，转换为 "YYYY-MM-DD"
+    if (typeof sampleDate === 'object' && sampleDate instanceof Date) {
+      sampleDate = sampleDate.toISOString().split('T')[0];
+    } else {
+      // 如果是字符串，截掉可能的时间部分
+      sampleDate = String(sampleDate).split('T')[0];
+    }
+  %>
+  <%= sampleDate %>
+</div>
+
+        </div>
+        <div class="info-item">
+            <div class="info-label fw-bold">检测完成日期</div>
+            <div class="info-value">
+            <% 
+                let testDate = site.data.report && site.data.report.test_complete_date 
+                ? site.data.report.test_complete_date 
+                : '2025-09-05';
+
+                // 如果是 Date 对象，格式化为 "YYYY-MM-DD"
+                if (typeof testDate === 'object' && testDate instanceof Date) {
+                testDate = testDate.toISOString().split('T')[0];
+                } else {
+                // 如果是字符串，去掉可能的时间部分（如 "T00:00:00.000Z"）
+                testDate = String(testDate).split('T')[0];
+                }
+            %>
+            <%= testDate %>
+            </div>
+
+        </div>
+        <div class="info-item">
+            <div class="info-label fw-bold">复核员编号</div>
+            <div class="info-value"><%= site.data.report && site.data.report.reviewer_id ? site.data.report.reviewer_id : '' %></div>
+        </div>
+        <div class="info-item">
+            <div class="info-label fw-bold">参考基因组版本</div>
+            <div class="info-value"><%= site.data.report && site.data.report.reference_genome ? site.data.report.reference_genome : '' %></div>
+        </div>
+        <div class="info-item" style="grid-column: span 2;">
+            <div class="info-label fw-bold">检测平台</div>
+            <div class="info-value"><%= site.data.report && site.data.report.test_platform ? site.data.report.test_platform : '' %></div>
+        </div>
+        </div>
+    </div>
+    </div>
+</div>

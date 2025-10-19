@@ -1,0 +1,19 @@
+胰岛素:
+  function: 由胰腺β细胞分泌，调节血糖代谢，促进葡萄糖进入细胞。
+  clinical_significance: 调节血糖水平，异常时可能提示糖尿病相关疾病。
+  
+瘦素:
+  function: 主要由脂肪组织分泌，调节能量平衡和食欲，参与胰岛素敏感性调节。
+  clinical_significance: 升高可能提示脂肪组织增加或瘦素抵抗。
+  
+C反应蛋白:
+  function: 由肝脏产生的急性期反应蛋白，是系统性炎症的标志物。
+  clinical_significance: 升高提示存在炎症反应，可能与心血管疾病风险增加相关。
+  
+LDL-C:
+  function: 低密度脂蛋白胆固醇，主要负责将胆固醇从肝脏运送到身体其他组织。
+  clinical_significance: 升高增加动脉粥样硬化和冠心病风险。
+  
+HDL-C:
+  function: 高密度脂蛋白胆固醇，将多余胆固醇从外周组织运回肝脏进行代谢。
+  clinical_significance: 降低增加冠心病风险。

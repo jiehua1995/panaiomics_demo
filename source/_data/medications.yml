@@ -1,0 +1,44 @@
+- id: 三环类抗忧郁药
+  name: 阿米替林
+  target_disease: 重度忧郁症和各种疼痛症候群，如神经性疼痛、纤维肌痛、偏头痛和紧缩型头痛
+  related_genes:
+    - name: CYP2C19
+      variant: '*3/*3'
+      phenotype: 叔胺代谢大大降低
+  advice: 避免使用叔胺类药物，因为其可能降低疗效。考虑使用非CYP2C19代谢的替代药物。主要不经CYP2C19代谢的TCA包括仲胺类药物去甲替林和地昔帕明。对于叔胺类药物，建议将推荐起始剂量减少50%。利用治疗药物监测来指导剂量调整。根据观察到的临床反应、症状改善和副作用（如有）最小化（或达到最小）来调整剂量。
+
+- id: 黄嘌呤氧化酶抑制剂
+  name: 别嘌呤醇
+  target_disease: 痛风、高尿酸血症
+  related_genes:
+    - name: ABCG2
+      variant: 'rs2231142'
+      phenotype: 功能下降
+  advice: 别嘌呤醇的有效性降低，意味着需要更高的剂量。ABCG2基因变异会降低肾脏和肠道对尿酸的排泄，这意味着需要更强地抑制别嘌呤醇的尿酸生成，才能达到所需的尿酸浓度。
+
+- id: 缺氧诱导因子-2α抑制药贝组替芬(Belzutifan)
+  name: 贝组替芬
+  target_disease: 抑郁症、强迫症、惊恐障碍、创伤后应激障碍、社交焦虑症和经前烦躁障碍
+  related_genes:
+    - name: CYP2C19
+      variant: '*3/*3'
+      phenotype: 代谢减慢
+  advice: 会导致更高的全身浓度，并可能导致更高的不良反应风险（贫血、缺氧）。考虑使用替代药物。如必须使用，建议将推荐起始剂量减少50%。利用治疗药物监测来指导剂量调整。根据观察到的临床反应、症状改善和副作用（如有）最小化（或达到最小）来调整剂量。
+
+- id: 治疗和预防艾滋病的抗反转录病毒药物
+  name: 依法韦仑
+  target_disease: 艾滋病
+  related_genes:
+    - name: CYP2B6
+      variant: '*1/*1'
+      phenotype: 代谢正常
+  advice: 依法韦仑的代谢主要通过CYPP2B6进行，因此在CYPP2B6正常代谢的患者中，推荐的起始剂量可以使用标准方案。
+
+- id: 阻断凝血因子II、VII、IX 和X 的合成来抑制凝血
+  name: 苯丙香豆素
+  target_disease: 预防和治疗血栓栓塞性疾病
+  related_genes:
+    - name: VKORC1
+      variant: 'rs9923231'
+      phenotype: 容易过敏
+  advice: 代谢极慢的患者可能会出现药物积累，增加不良反应风险。建议将推荐起始剂量减少50%并更频繁地进行检测，如有不适，应及时停止用药。

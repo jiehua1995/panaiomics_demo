@@ -1,0 +1,518 @@
+<!-- 主应用容器 -->
+<div class="report-container">
+
+  <%- partial('part/announcement') %>
+
+  <!-- 报告内容 -->
+  <div>
+    
+    <!-- 报告头部 -->
+    <%- partial('part/report_header') %>
+
+    <!-- 患者信息部分 -->
+    <div class="report-section" id="patient-section">
+      <h3 class="section-title">
+        <i class="fas fa-user me-2"></i> 受检者信息
+      </h3>
+      
+      <div class="row">
+        <div class="col-md-3">
+          <div class="card detail-card h-100">
+            <div class="card-body">
+              <h5 class="card-title fs-6 text-secondary">基本信息</h5>
+              <h4 class="mb-3"><%= site.data.patient && site.data.patient.name ? site.data.patient.name : '' %></h4>
+              <div class="mb-2">
+                <span class="text-muted">编号:</span>
+                <span class="ms-2"><%= site.data.patient && site.data.patient.id ? site.data.patient.id : '' %></span>
+              </div>
+              <div class="mb-2">
+                <span class="text-muted">年龄:</span>
+                <span class="ms-2"><%= site.data.patient && site.data.patient.age ? site.data.patient.age + '岁' : '' %></span>
+              </div>
+              <div class="mb-2">
+                <span class="text-muted">性别:</span>
+                <span class="ms-2"><%= site.data.patient && site.data.patient.sex ? site.data.patient.sex : '' %></span>
+                <span class="badge bg-secondary ms-1"><%= site.data.patient && site.data.patient.sex_chromosome ? site.data.patient.sex_chromosome : '' %></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-9">
+          <div class="card detail-card h-100">
+            <div class="card-body">
+              <h5 class="card-title fs-6 text-secondary">健康概览</h5>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <h6 class="mb-1">身体质量指数 (BMI)</h6>
+                    <div class="d-flex align-items-center">
+                      <span class="fs-4 fw-bold"><%= site.data.patient && site.data.patient.health_metrics && site.data.patient.health_metrics.bmi ? site.data.patient.health_metrics.bmi : '' %></span>
+                      <span class="ms-2 badge bg-success"><%= site.data.patient && site.data.patient.health_metrics && site.data.patient.health_metrics.bmi_status ? site.data.patient.health_metrics.bmi_status : '' %></span>
+                    </div>
+                    <small class="text-muted">18.5-24.9为正常范围</small>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <h6 class="mb-1">检测类型</h6>
+                    <div class="d-flex flex-wrap">
+                      <% if (site.data.patient && site.data.patient.test_types && site.data.patient.test_types.length > 0) { %>
+                        <% site.data.patient.test_types.forEach(function(type, index) { %>
+                        <span class="badge me-2 mb-2 <%= index === 0 ? 'bg-primary' : index === 1 ? 'bg-info' : 'bg-secondary' %>"><%= type %></span>
+                        <% }); %>
+                      <% } %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 祖源分析部分 -->
+    <div class="report-section" id="ancestry-section">
+      <h3 class="section-title">
+        <i class="fas fa-dna me-2"></i> 祖源分析
+      </h3>
+      
+      <div class="alert alert-info mb-4">
+        <div class="d-flex">
+          <div class="me-3">
+            <i class="fas fa-globe-asia fa-2x"></i>
+          </div>
+          <div>
+            <h5 class="alert-heading">您的基因组起源</h5>
+            <p class="mb-0">祖源分析利用基因组中的特征变异位点，将您的基因组与全球参考人群数据库进行比较，确定您的遗传祖源构成。这些信息可用于了解您的历史迁徙背景，但不代表您的文化身份认同。</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="ancestry-world-map mb-4">
+        <!-- 这里可以放世界地图背景图 -->
+      </div>
+      
+      <div class="row mb-4">
+        <div class="col-md-6">
+          <div class="card detail-card h-100">
+            <div class="card-header bg-gradient-primary text-white">
+              <div class="d-flex align-items-center">
+                <i class="fas fa-globe me-2"></i>
+                <h6 class="mb-0">全球主要人群祖源</h6>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-sm table-hover">
+                  <thead class="table-light">
+                    <tr>
+                      <th>人群</th>
+                      <th>比例</th>
+                      <th>可视化</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% if (site.data.ancestry && site.data.ancestry.major_groups && site.data.ancestry.major_groups.length > 0) { %>
+                      <% site.data.ancestry.major_groups.forEach(function(group, index) { %>
+                      <tr>
+                        <td>
+                          <div class="d-flex align-items-center">
+                            <div class="ancestry-color-dot me-2" style="background-color: <%= ['#3498db', '#e74c3c', '#2ecc71', '#f39c12', '#9b59b6'][index % 5] %>"></div>
+                            <span><%= group.name %></span>
+                          </div>
+                        </td>
+                        <td class="fw-bold"><%= group.percentage.toFixed(2) %>%</td>
+                        <td>
+                          <div class="progress" style="height: 12px;">
+                            <div class="progress-bar" role="progressbar" 
+                                 style="width: <%= group.percentage %>%; background-color: <%= ['#3498db', '#e74c3c', '#2ecc71', '#f39c12', '#9b59b6'][index % 5] %>" 
+                                 aria-valuenow="<%= group.percentage %>" 
+                                 aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </td>
+                      </tr>
+                      <% }); %>
+                    <% } %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-6">
+          <div class="card detail-card h-100">
+            <div class="card-header bg-gradient-success text-white">
+              <div class="d-flex align-items-center">
+                <i class="fas fa-map-marked-alt me-2"></i>
+                <h6 class="mb-0">区域细分分析</h6>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-sm table-hover">
+                  <thead class="table-light">
+                    <tr>
+                      <th>民族</th>
+                      <th>比例</th>
+                      <th>可视化</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% if (site.data.ancestry && site.data.ancestry.subgroups && site.data.ancestry.subgroups.length > 0) { %>
+                      <% site.data.ancestry.subgroups.forEach(function(group, index) { %>
+                      <tr>
+                        <td>
+                          <div class="d-flex align-items-center">
+                            <div class="ancestry-subgroup-icon me-2">
+                              <i class="fas fa-users"></i>
+                            </div>
+                            <span><%= group.name %></span>
+                          </div>
+                        </td>
+                        <td class="fw-bold"><%= group.percentage.toFixed(2) %>%</td>
+                        <td>
+                          <div class="progress" style="height: 12px;">
+                            <div class="progress-bar bg-success" role="progressbar" 
+                                 style="width: <%= group.percentage %>%; opacity: <%= (0.6 + index * 0.1) %>" 
+                                 aria-valuenow="<%= group.percentage %>" 
+                                 aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </td>
+                      </tr>
+                      <% }); %>
+                    <% } %>
+                  </tbody>
+                </table>
+              </div>
+              
+              <div class="mt-3 small bg-light p-2 rounded">
+                <i class="fas fa-lightbulb me-1 text-warning"></i>
+                <span><%= site.data.ancestry && site.data.ancestry.notes ? site.data.ancestry.notes : '' %></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 疾病风险评估部分 -->
+    <div class="report-section" id="risk-assessment-section">
+      <h3 class="section-title">
+        <i class="fas fa-chart-line me-2"></i> 疾病风险评估与早期筛查
+      </h3>
+
+      <div class="alert alert-info mb-4">
+        <div class="d-flex">
+          <div class="me-3">
+            <i class="fas fa-info-circle fa-2x"></i>
+          </div>
+          <div>
+            <h5 class="alert-heading">关于风险评估</h5>
+            <p class="mb-0">本报告结合基因组学和蛋白质组学数据，为您提供疾病易感性和风险评估结果。基因组数据反映终身遗传易感性（从"极不易感"到"高度易感"），蛋白质组数据反映当前健康风险（从"低风险"到"高风险"）。请点击"查看详情"了解更多科学依据和预防建议。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 疾病风险列表 -->
+      <% if (site.data.diseases && site.data.diseases.length > 0) { %>
+        <% site.data.diseases.forEach(function(disease, index) { %>
+        <div class="card detail-card mb-3">
+          <div class="card-header d-flex justify-content-between align-items-center py-3">
+            <div>
+              <span class="badge <%= disease.genomic.risk_score < 0.3 ? 'bg-success' : disease.genomic.risk_score < 0.7 ? 'bg-warning' : 'bg-danger' %>"><%= disease.info.category %></span>
+              <span class="ms-2 fw-bold fs-5"><%= disease.info.name %></span>
+            </div>
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-risk-<%= index %>" aria-expanded="false" aria-controls="collapse-risk-<%= index %>">查看详情</button>
+          </div>
+          
+          <div class="card-body collapse-summary-<%= index %>">
+            <div class="row">
+              <div class="col-md-3">
+                <div class="d-flex align-items-center mb-2">
+                  <div class="risk-indicator <%= disease.genomic && disease.genomic.risk_score < 0.2 ? 'risk-very-low' : disease.genomic && disease.genomic.risk_score >= 0.2 && disease.genomic.risk_score < 0.4 ? 'risk-low' : disease.genomic && disease.genomic.risk_score >= 0.4 && disease.genomic.risk_score < 0.6 ? 'risk-medium' : disease.genomic && disease.genomic.risk_score >= 0.6 && disease.genomic.risk_score < 0.8 ? 'risk-high' : 'risk-very-high' %>">
+                    <i class="fas <%= disease.genomic && disease.genomic.risk_score < 0.2 ? 'fa-smile' : disease.genomic && disease.genomic.risk_score >= 0.2 && disease.genomic.risk_score < 0.4 ? 'fa-check' : disease.genomic && disease.genomic.risk_score >= 0.4 && disease.genomic.risk_score < 0.6 ? 'fa-equals' : disease.genomic && disease.genomic.risk_score >= 0.6 && disease.genomic.risk_score < 0.8 ? 'fa-exclamation' : 'fa-exclamation-triangle' %>"></i>
+                  </div>
+                  <span class="fw-bold">基因组易感性:</span>
+                  <span class="ms-2">
+                    <% if (disease.genomic && disease.genomic.risk_score < 0.2) { %>极不易感
+                    <% } else if (disease.genomic && disease.genomic.risk_score >= 0.2 && disease.genomic.risk_score < 0.4) { %>不易感
+                    <% } else if (disease.genomic && disease.genomic.risk_score >= 0.4 && disease.genomic.risk_score < 0.6) { %>人群平均水平
+                    <% } else if (disease.genomic && disease.genomic.risk_score >= 0.6 && disease.genomic.risk_score < 0.8) { %>易感
+                    <% } else { %>高度易感<% } %>
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="d-flex align-items-center mb-2">
+                  <div class="risk-indicator <%= disease.proteomic && disease.proteomic.risk_score < 0.2 ? 'risk-very-low' : disease.proteomic && disease.proteomic.risk_score >= 0.2 && disease.proteomic.risk_score < 0.4 ? 'risk-low' : disease.proteomic && disease.proteomic.risk_score >= 0.4 && disease.proteomic.risk_score < 0.6 ? 'risk-medium' : disease.proteomic && disease.proteomic.risk_score >= 0.6 && disease.proteomic.risk_score < 0.8 ? 'risk-high' : 'risk-very-high' %>">
+                    <i class="fas <%= disease.proteomic && disease.proteomic.risk_score < 0.2 ? 'fa-thumbs-up' : disease.proteomic && disease.proteomic.risk_score >= 0.2 && disease.proteomic.risk_score < 0.4 ? 'fa-check' : disease.proteomic && disease.proteomic.risk_score >= 0.4 && disease.proteomic.risk_score < 0.6 ? 'fa-equals' : disease.proteomic && disease.proteomic.risk_score >= 0.6 && disease.proteomic.risk_score < 0.8 ? 'fa-exclamation' : 'fa-exclamation-triangle' %>"></i>
+                  </div>
+                  <span class="fw-bold">蛋白质组风险:</span>
+                  <span class="ms-2">
+                    <% if (disease.proteomic && disease.proteomic.risk_score < 0.2) { %>低风险
+                    <% } else if (disease.proteomic && disease.proteomic.risk_score >= 0.2 && disease.proteomic.risk_score < 0.4) { %>中低风险
+                    <% } else if (disease.proteomic && disease.proteomic.risk_score >= 0.4 && disease.proteomic.risk_score < 0.6) { %>人群平均水平
+                    <% } else if (disease.proteomic && disease.proteomic.risk_score >= 0.6 && disease.proteomic.risk_score < 0.8) { %>中高风险
+                    <% } else { %>高风险<% } %>
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="d-flex align-items-center mb-2">
+                  <i class="fas fa-dna me-2 text-secondary"></i>
+                  <span class="fw-bold">相关基因:</span>
+                  <span class="ms-2">
+                    <% if (disease.genomic && disease.genomic.genes && disease.genomic.genes.length > 0) { %>
+                      <% disease.genomic.genes.forEach(function(gene, i) { %>
+                        <span><%= gene.name %><%= i < disease.genomic.genes.length - 1 ? ', ' : '' %></span>
+                      <% }); %>
+                    <% } %>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="collapse-risk-<%= index %>" class="collapse">
+            <div class="card-body">
+              <p class="mb-3"><%= disease.info.definition %></p>
+              
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <div class="card">
+                    <div class="card-header py-2 table-header">
+                      <div class="d-flex align-items-center">
+                        <div class="risk-indicator <%= disease.genomic && disease.genomic.risk_score < 0.2 ? 'risk-very-low' : disease.genomic && disease.genomic.risk_score >= 0.2 && disease.genomic.risk_score < 0.4 ? 'risk-low' : disease.genomic && disease.genomic.risk_score >= 0.4 && disease.genomic.risk_score < 0.6 ? 'risk-medium' : disease.genomic && disease.genomic.risk_score >= 0.6 && disease.genomic.risk_score < 0.8 ? 'risk-high' : 'risk-very-high' %>" 
+                             onclick="showRiskLevelTooltip('genomic', <%= disease.genomic ? disease.genomic.risk_score : 0 %>)"
+                             style="cursor: pointer;" 
+                             title="点击查看风险级别说明">
+                          <i class="fas <%= disease.genomic && disease.genomic.risk_score < 0.2 ? 'fa-smile' : disease.genomic && disease.genomic.risk_score >= 0.2 && disease.genomic.risk_score < 0.4 ? 'fa-check' : disease.genomic && disease.genomic.risk_score >= 0.4 && disease.genomic.risk_score < 0.6 ? 'fa-equals' : disease.genomic && disease.genomic.risk_score >= 0.6 && disease.genomic.risk_score < 0.8 ? 'fa-exclamation' : 'fa-exclamation-triangle' %>"></i>
+                        </div>
+                        <span class="fw-bold">基因组易感性评估</span>
+                        <span class="ms-auto">
+                          <% if (disease.genomic && disease.genomic.risk_score < 0.2) { %>极不易感
+                          <% } else if (disease.genomic && disease.genomic.risk_score >= 0.2 && disease.genomic.risk_score < 0.4) { %>不易感
+                          <% } else if (disease.genomic && disease.genomic.risk_score >= 0.4 && disease.genomic.risk_score < 0.6) { %>人群平均水平
+                          <% } else if (disease.genomic && disease.genomic.risk_score >= 0.6 && disease.genomic.risk_score < 0.8) { %>易感
+                          <% } else { %>高度易感<% } %>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <h6 class="card-subtitle mb-2 text-muted">科学依据</h6>
+                      <p class="card-text"><%= disease.genomic ? disease.genomic.evidence : '' %></p>
+                      
+                      <h6 class="card-subtitle mb-2 text-muted">部分相关基因变异</h6>
+                      <div class="d-flex flex-wrap mb-3">
+                        <% if (disease.genomic && disease.genomic.genes && disease.genomic.genes.length > 0) { %>
+                          <% disease.genomic.genes.forEach(function(gene) { %>
+                          <a href="https://www.ncbi.nlm.nih.gov/datasets/gene/<%= gene.ncbi_id || '' %>" target="_blank" class="gene-badge text-decoration-none">
+                            <span><%= gene.name %></span>
+                            <span class="ms-1 small"><%= gene.variant %></span>
+                          </a>
+                          <% }); %>
+                        <% } %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="col-md-6">
+                  <div class="card">
+                    <div class="card-header py-2 table-header">
+                      <div class="d-flex align-items-center">
+                        <div class="risk-indicator <%= disease.proteomic && disease.proteomic.risk_score < 0.2 ? 'risk-very-low' : disease.proteomic && disease.proteomic.risk_score >= 0.2 && disease.proteomic.risk_score < 0.4 ? 'risk-low' : disease.proteomic && disease.proteomic.risk_score >= 0.4 && disease.proteomic.risk_score < 0.6 ? 'risk-medium' : disease.proteomic && disease.proteomic.risk_score >= 0.6 && disease.proteomic.risk_score < 0.8 ? 'risk-high' : 'risk-very-high' %>" 
+                             onclick="showRiskLevelTooltip('proteomic', <%= disease.proteomic ? disease.proteomic.risk_score : 0 %>)"
+                             style="cursor: pointer;" 
+                             title="点击查看风险级别说明">
+                          <i class="fas <%= disease.proteomic && disease.proteomic.risk_score < 0.2 ? 'fa-thumbs-up' : disease.proteomic && disease.proteomic.risk_score >= 0.2 && disease.proteomic.risk_score < 0.4 ? 'fa-check' : disease.proteomic && disease.proteomic.risk_score >= 0.4 && disease.proteomic.risk_score < 0.6 ? 'fa-equals' : disease.proteomic && disease.proteomic.risk_score >= 0.6 && disease.proteomic.risk_score < 0.8 ? 'fa-exclamation' : 'fa-exclamation-triangle' %>"></i>
+                        </div>
+                        <span class="fw-bold">蛋白质组风险评估</span>
+                        <span class="ms-auto">
+                          <% if (disease.proteomic && disease.proteomic.risk_score < 0.2) { %>低风险
+                          <% } else if (disease.proteomic && disease.proteomic.risk_score >= 0.2 && disease.proteomic.risk_score < 0.4) { %>中低风险
+                          <% } else if (disease.proteomic && disease.proteomic.risk_score >= 0.4 && disease.proteomic.risk_score < 0.6) { %>人群平均水平
+                          <% } else if (disease.proteomic && disease.proteomic.risk_score >= 0.6 && disease.proteomic.risk_score < 0.8) { %>中高风险
+                          <% } else { %>高风险<% } %>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <h6 class="card-subtitle mb-2 text-muted">检测结果</h6>
+                      <p class="card-text"><%= disease.proteomic ? disease.proteomic.evidence : '' %></p>
+                      
+                      <h6 class="card-subtitle mb-2 text-muted">部分相关蛋白标志物</h6>
+                      <table class="table table-sm">
+                        <thead>
+                          <tr>
+                            <th>蛋白质</th>
+                            <th>变化情况</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% if (disease.proteomic && disease.proteomic.proteins && disease.proteomic.proteins.length > 0) { %>
+                            <% disease.proteomic.proteins.forEach(function(protein) { %>
+                            <tr>
+                              <td>
+                                <a href="https://www.uniprot.org/uniprotkb/<%= protein.id || '' %>" target="_blank" class="text-decoration-none">
+                                  <span><%= protein.name %></span>
+                                </a>
+                              </td>
+                              <td>
+                                <span class="<%= protein.change.includes('升高') ? 'text-danger' : protein.change.includes('正常') ? 'text-success' : 'text-warning' %>">
+                                  <%= protein.change %>
+                                </span>
+                              </td>
+                            </tr>
+                            <% }); %>
+                          <% } %>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="evidence-section">
+                <h5 class="mb-3">
+                  <i class="fas fa-stethoscope me-2"></i> 医疗建议
+                </h5>
+                <p class="mb-0"><%= disease.recommendation || '' %></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <% }); %>
+      <% } %>
+    </div>
+
+    <!-- 药物基因组学分析部分 -->
+    <div class="report-section" id="medication-section">
+      <h3 class="section-title">
+        <i class="fas fa-pills me-2"></i> 药物基因组学分析
+      </h3>
+
+      <div class="alert alert-info mb-4">
+        <div class="d-flex">
+          <div class="me-3">
+            <i class="fas fa-info-circle fa-2x"></i>
+          </div>
+          <div>
+            <h5 class="alert-heading">个体化用药指导</h5>
+            <p class="mb-0">药物基因组学分析基于个人基因型，评估药物代谢酶、转运体和靶点基因的变异，为个体化用药提供参考。请在医生指导下调整用药方案。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 药物列表 -->
+      <% if (site.data.medications && site.data.medications.length > 0) { %>
+        <% site.data.medications.forEach(function(med, index) { %>
+        <div class="card detail-card mb-3">
+          <div class="card-header d-flex justify-content-between align-items-center py-3">
+            <div>
+              <span class="badge bg-secondary"><%= med.target_disease %></span>
+              <span class="ms-2 fw-bold fs-5"><%= med.name %></span>
+            </div>
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-med-<%= index %>" aria-expanded="false" aria-controls="collapse-med-<%= index %>">查看详情</button>
+          </div>
+          <div id="collapse-med-<%= index %>" class="collapse">
+            <div class="card-body">
+              <div class="mb-3">
+                <div class="d-flex">
+                  <strong class="me-3">适应症/靶向疾病:</strong>
+                  <span class="tab-spacer"></span>
+                  <span><%= med.target_disease %></span>
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <div class="d-flex align-items-center">
+                  <strong class="me-3">相关基因:</strong>
+                  <span class="tab-spacer"></span>
+                  <div class="d-flex flex-wrap">
+                    <% if (med.related_genes && med.related_genes.length > 0) { %>
+                      <% med.related_genes.forEach(function(gene) { %>
+                      <a href="#" class="gene-badge text-decoration-none me-2 mb-2" onclick="showGeneInfo({name: '<%= gene.name %>', variant: '<%= gene.variant %>', phenotype: '<%= gene.phenotype %>'})">
+                        <span><%= gene.name %></span>
+                        <span class="small ms-1"><%= gene.variant %></span>
+                        <span class="small ms-1 text-muted">(<%= gene.phenotype %>)</span>
+                      </a>
+                      <% }); %>
+                    <% } %>
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <div class="d-flex">
+                  <strong class="me-3">用药建议:</strong>
+                  <span class="tab-spacer"></span>
+                  <span><%= med.advice %></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <% }); %>
+      <% } %>
+    </div>
+    
+    <!-- 报告页脚 -->
+    <div class="report-section report-footer" id="report-footer-section">
+      <div class="mb-4">
+        <h3 class="section-title">
+          <i class="fas fa-exclamation-circle me-2"></i> 报告免责声明
+        </h3>
+        <div class="alert alert-warning">
+          <p>本健康报告由智绘组学PanAIOmics提供。报告中的发现基于当前科学研究，但个体健康状况受多种因素影响。基因组数据反应终身的疾病易感风险和药物代谢特征，蛋白质组数据提供了实时的状态信息。</p>
+          <p>请注意：</p>
+          <ul>
+            <li>所有健康决策应在医疗专业人士指导下进行</li>
+            <li>蛋白质分析反映特定时间点的信息，可能随时间变化</li>
+            <li>环境、生活方式和其他因素也会显著影响健康风险</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="mb-3">
+        <h3 class="section-title">
+          <i class="fas fa-lightbulb me-2"></i> 后续建议
+        </h3>
+        <div class="alert alert-info">
+          <p>基于您的检测结果，我们建议：</p>
+          <ol>
+            <li>与您的医生分享此报告结果并讨论个性化预防策略</li>
+            <li>针对高风险项目，考虑进行定期筛查和随访</li>
+            <li>保持健康生活方式，包括均衡饮食、规律运动和充足休息</li>
+            <li>每6-12个月更新您的蛋白质组检测，监测健康变化</li>
+          </ol>
+        </div>
+      </div>
+      <hr>
+      
+      <div class="d-flex justify-content-between align-items-center mt-4">
+        <div>
+          <p class="mb-0"><strong><%= site.data.company && site.data.company.name ? site.data.company.name : 'PanAiOmics' %></strong></p>
+          <p class="small text-muted mb-0">版本 <span><%= site.data.company && site.data.company.version ? site.data.company.version : '1.0.0' %></span></p>
+        </div>
+        <div class="text-end">
+          <p class="mb-0">报告编号: <strong><%= site.data.report && site.data.report.id ? site.data.report.id : '' %></strong></p>
+          <p class="small text-muted mb-0">生成日期: 
+            <span>
+  <%= site.data.report && site.data.report.report_date 
+    ? site.data.report.report_date.split('T')[0] 
+    : new Date().toISOString().slice(0, 10) %>
+</span>
+
+        | 审核人员: 
+        <span>
+          <%= site.data.report && site.data.report.reviewer_id ? site.data.report.reviewer_id : '' %>
+        </span>
+      </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
