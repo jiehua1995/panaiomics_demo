@@ -1,0 +1,323 @@
+:root {
+  --primary-color: #2c3e50;
+  --secondary-color: #3498db;
+  --accent-color: #e74c3c;
+  --light-bg: #f8f9fa;
+  --dark-bg: #343a40;
+  --border-radius: 10px;
+}
+
+body {
+  background-color: #f0f2f5;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: #333;
+}
+
+.report-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.report-header {
+  background: linear-gradient(10deg, rgba(44, 62, 80, 0.85), rgba(52, 152, 219, 0.85));
+  color: white;
+  padding: 20px;
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 25px;
+}
+
+.report-section {
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  padding: 25px;
+  margin-bottom: 25px;
+}
+
+.section-title {
+  border-bottom: 2px solid var(--secondary-color);
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.qrcode {
+  width: 80px;
+  height: 80px;
+  border-radius: 5px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+/* 响应式布局调整 */
+@media (max-width: 992px) {
+  .info-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .info-item[style*="grid-column: span 2"] {
+    grid-column: span 3 !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+  .info-item[style*="grid-column: span 2"] {
+    grid-column: span 1 !important;
+  }
+}
+
+.info-item {
+  border-left: 3px solid var(--secondary-color);
+  padding-left: 10px;
+  grid-column: span 1; /* 默认占一列 */
+}
+
+.info-label {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 2px;
+}
+
+.info-value {
+  font-weight: 500;
+  color: white;
+}
+
+.risk-indicator {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  margin-right: 12px;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+}
+
+.risk-indicator:hover {
+  transform: scale(1.1);
+}
+
+.risk-very-low {
+  background-color: #2ecc71;
+  box-shadow: 0 2px 5px rgba(46, 204, 113, 0.3);
+  animation: pulse-green 2s infinite;
+}
+
+.risk-low {
+  background-color: #27ae60;
+  box-shadow: 0 2px 5px rgba(39, 174, 96, 0.3);
+  animation: pulse-green 2s infinite;
+}
+
+.risk-medium {
+  background-color: #f39c12;
+  color: white;
+  box-shadow: 0 2px 5px rgba(243, 156, 18, 0.3);
+  animation: pulse-yellow 2s infinite;
+}
+
+.risk-high {
+  background-color: #e74c3c;
+  box-shadow: 0 2px 5px rgba(231, 76, 60, 0.3);
+  animation: pulse-red 2s infinite;
+}
+
+.risk-very-high {
+  background-color: #c0392b;
+  box-shadow: 0 2px 5px rgba(192, 57, 43, 0.3);
+  animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-green {
+  0% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.4); }
+  70% { box-shadow: 0 0 0 5px rgba(39, 174, 96, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0); }
+}
+
+@keyframes pulse-yellow {
+  0% { box-shadow: 0 0 0 0 rgba(243, 156, 18, 0.4); }
+  70% { box-shadow: 0 0 0 6px rgba(243, 156, 18, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(243, 156, 18, 0); }
+}
+
+@keyframes pulse-red {
+  0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4); }
+  70% { box-shadow: 0 0 0 7px rgba(231, 76, 60, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+}
+
+.detail-card {
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  margin-bottom: 15px;
+  border-radius: var(--border-radius);
+}
+
+.evidence-section {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: var(--border-radius);
+  margin-top: 15px;
+  font-size: 0.9rem;
+}
+
+.table-header {
+  background-color: #f0f2f5;
+  font-weight: 500;
+}
+
+.gene-badge {
+  background-color: #e9ecef;
+  border-radius: 15px;
+  padding: 2px 8px;
+  font-size: 0.8rem;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  display: inline-block;
+  color: #495057;
+}
+
+.footer {
+  text-align: center;
+  padding: 20px;
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.logo-placeholder {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  border-radius: 12px; /* 稍微增加圆角半径以保持比例 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 24px; /* 增加字体大小以配合更大的容器 */
+  overflow: hidden; /* 确保内容不超出边界 */
+}
+
+.company-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* 确保图片适当缩放并填充整个区域 */
+  border-radius: 10px; /* 与容器保持一致的圆角 */
+}
+
+/* 加载动画 */
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top-color: var(--secondary-color);
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 制表符间隔 */
+.tab-spacer {
+  display: inline-block;
+  width: 2em;
+  min-width: 2em;
+}
+
+/* 祖源分析样式 */
+#ancestry-section .progress {
+  border-radius: 10px;
+  background-color: rgba(0,0,0,0.05);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+}
+
+#ancestry-section .progress-bar {
+  border-radius: 10px;
+  transition: width 1s ease-in-out;
+}
+
+.ancestry-color-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.ancestry-subgroup-icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: #2ecc71;
+}
+
+.bg-gradient-primary {
+  background: linear-gradient(135deg, #3498db, #1a5276);
+}
+
+.bg-gradient-success {
+  background: linear-gradient(135deg, #2ecc71, #1d8348);
+}
+
+.ancestry-world-map {
+  height: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 基本样式 */
+.card {
+  border: 1px solid #ddd;
+}
+
+.detail-card {
+  margin-bottom: 10mm;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table td, table th {
+  padding: 4pt;
+  border: 0.5pt solid #ddd;
+}
+
+/* 打印样式 */
+@media print {
+  body {
+    background: white !important;
+  }
+  
+  .card {
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+    page-break-inside: avoid;
+  }
+}

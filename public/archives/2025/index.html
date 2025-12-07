@@ -1,0 +1,1756 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="author" content="智绘组学PanAIOmics">
+<meta name="description" content="为了便于展示核心功能与可视化效果，本演示报告仅呈现部分疾病与药物信息。完整版本将覆盖上百种疾病与药物，能够实现临床级别的多组学健康评估与用药指导。">
+<meta name="keywords" content="PanAIOmics, 评估报告, 多组学, 组学分析">
+
+<title>PanAiOmics健康报告</title>
+
+
+
+<!-- 引入Bootstrap样式 -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- 引入Font Awesome图标库 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- 引入Alpine.js -->
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<!-- 引入SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- 引入JsBarcode -->
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+<!-- 引入QRCode -->
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+  
+<link rel="stylesheet" href="/css/main.css">
+
+<meta name="generator" content="Hexo 8.0.0"></head>
+<body>
+  <!-- 主应用容器 -->
+<div class="report-container">
+
+  <!-- 顶部工具栏 -->
+<div class="alert alert-secondary d-flex justify-content-between align-items-center mb-4">
+<span>
+    <i class="fas fa-info-circle"></i> 
+    为了便于展示核心功能与可视化效果，本演示报告仅呈现部分疾病与药物信息。完整版本将覆盖上百种疾病与药物，能够实现临床级别的多组学健康评估与用药指导。
+</span>
+</div>
+
+  <!-- 报告内容 -->
+  <div>
+    
+    <!-- 报告头部 -->
+    <div class="report-header">
+    <div class="row align-items-center">
+    <div class="col-md-6">
+        <div class="d-flex align-items-center">
+        <div class="logo-placeholder me-3">
+            <img src="/images/logo.png" alt="公司Logo" class="company-logo" />
+        </div>
+        <div>
+            <h1 class="mb-0 fs-2 fw-bold">智绘组学PanAIOmics</h1>
+            <h2 class="fs-5 fw-light mb-0">多组学健康评估报告</h2>
+            <p class="mb-0 mt-1 small text-light">Multi-Omics Health Report</p>
+        </div>
+        </div>
+    </div>
+    <div class="col-md-6 text-md-end mt-3 mt-md-0">
+        <div class="d-flex flex-column align-items-md-end">
+        <div class="mb-2">
+            <canvas id="barcode" width="200" height="50"></canvas>
+        </div>
+        <div class="d-flex align-items-center justify-content-md-end">
+            <span class="me-2 small text-white">报告编号: <span id="report-id">GEN-20250907-042</span></span>
+            <div id="qrcode" class="qrcode"></div>
+        </div>
+        </div>
+    </div>
+    </div>
+    
+    <div class="row mt-4">
+    <div class="col-12">
+        <div class="info-grid">
+        <div class="info-item">
+            <div class="info-label fw-bold">取样日期</div>
+            <div class="info-value">
+  
+  2025-08-30
+</div>
+
+        </div>
+        <div class="info-item">
+            <div class="info-label fw-bold">检测完成日期</div>
+            <div class="info-value">
+            
+            2025-09-05
+            </div>
+
+        </div>
+        <div class="info-item">
+            <div class="info-label fw-bold">复核员编号</div>
+            <div class="info-value">ZGS-B01254</div>
+        </div>
+        <div class="info-item">
+            <div class="info-label fw-bold">参考基因组版本</div>
+            <div class="info-value">GRCh38/hg38</div>
+        </div>
+        <div class="info-item" style="grid-column: span 2;">
+            <div class="info-label fw-bold">检测平台</div>
+            <div class="info-value">纳米孔全基因组+血浆蛋白质组DIA质谱</div>
+        </div>
+        </div>
+    </div>
+    </div>
+</div>
+
+    <!-- 患者信息部分 -->
+    <div class="report-section" id="patient-section">
+      <h3 class="section-title">
+        <i class="fas fa-user me-2"></i> 受检者信息
+      </h3>
+      
+      <div class="row">
+        <div class="col-md-3">
+          <div class="card detail-card h-100">
+            <div class="card-body">
+              <h5 class="card-title fs-6 text-secondary">基本信息</h5>
+              <h4 class="mb-3">张明</h4>
+              <div class="mb-2">
+                <span class="text-muted">编号:</span>
+                <span class="ms-2">PT-20250907-001</span>
+              </div>
+              <div class="mb-2">
+                <span class="text-muted">年龄:</span>
+                <span class="ms-2">35岁</span>
+              </div>
+              <div class="mb-2">
+                <span class="text-muted">性别:</span>
+                <span class="ms-2">男</span>
+                <span class="badge bg-secondary ms-1">XY</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-9">
+          <div class="card detail-card h-100">
+            <div class="card-body">
+              <h5 class="card-title fs-6 text-secondary">健康概览</h5>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <h6 class="mb-1">身体质量指数 (BMI)</h6>
+                    <div class="d-flex align-items-center">
+                      <span class="fs-4 fw-bold">23.4</span>
+                      <span class="ms-2 badge bg-success">正常范围</span>
+                    </div>
+                    <small class="text-muted">18.5-24.9为正常范围</small>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <h6 class="mb-1">检测类型</h6>
+                    <div class="d-flex flex-wrap">
+                      
+                        
+                        <span class="badge me-2 mb-2 bg-primary">三代测序全基因组测序</span>
+                        
+                        <span class="badge me-2 mb-2 bg-info">血浆蛋白质组DIA质谱分析</span>
+                        
+                        <span class="badge me-2 mb-2 bg-secondary">药物基因组学评估</span>
+                        
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 祖源分析部分 -->
+    <div class="report-section" id="ancestry-section">
+      <h3 class="section-title">
+        <i class="fas fa-dna me-2"></i> 祖源分析
+      </h3>
+      
+      <div class="alert alert-info mb-4">
+        <div class="d-flex">
+          <div class="me-3">
+            <i class="fas fa-globe-asia fa-2x"></i>
+          </div>
+          <div>
+            <h5 class="alert-heading">您的基因组起源</h5>
+            <p class="mb-0">祖源分析利用基因组中的特征变异位点，将您的基因组与全球参考人群数据库进行比较，确定您的遗传祖源构成。这些信息可用于了解您的历史迁徙背景，但不代表您的文化身份认同。</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="ancestry-world-map mb-4">
+        <!-- 这里可以放世界地图背景图 -->
+      </div>
+      
+      <div class="row mb-4">
+        <div class="col-md-6">
+          <div class="card detail-card h-100">
+            <div class="card-header bg-gradient-primary text-white">
+              <div class="d-flex align-items-center">
+                <i class="fas fa-globe me-2"></i>
+                <h6 class="mb-0">全球主要人群祖源</h6>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-sm table-hover">
+                  <thead class="table-light">
+                    <tr>
+                      <th>人群</th>
+                      <th>比例</th>
+                      <th>可视化</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    
+                      
+                      <tr>
+                        <td>
+                          <div class="d-flex align-items-center">
+                            <div class="ancestry-color-dot me-2" style="background-color: #3498db"></div>
+                            <span>东亚 (EAS)</span>
+                          </div>
+                        </td>
+                        <td class="fw-bold">94.40%</td>
+                        <td>
+                          <div class="progress" style="height: 12px;">
+                            <div class="progress-bar" role="progressbar" 
+                                 style="width: 94.4%; background-color: #3498db" 
+                                 aria-valuenow="94.4" 
+                                 aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </td>
+                      </tr>
+                      
+                      <tr>
+                        <td>
+                          <div class="d-flex align-items-center">
+                            <div class="ancestry-color-dot me-2" style="background-color: #e74c3c"></div>
+                            <span>非洲 (AFR)</span>
+                          </div>
+                        </td>
+                        <td class="fw-bold">2.63%</td>
+                        <td>
+                          <div class="progress" style="height: 12px;">
+                            <div class="progress-bar" role="progressbar" 
+                                 style="width: 2.63%; background-color: #e74c3c" 
+                                 aria-valuenow="2.63" 
+                                 aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </td>
+                      </tr>
+                      
+                      <tr>
+                        <td>
+                          <div class="d-flex align-items-center">
+                            <div class="ancestry-color-dot me-2" style="background-color: #2ecc71"></div>
+                            <span>美洲 (AMR)</span>
+                          </div>
+                        </td>
+                        <td class="fw-bold">1.93%</td>
+                        <td>
+                          <div class="progress" style="height: 12px;">
+                            <div class="progress-bar" role="progressbar" 
+                                 style="width: 1.93%; background-color: #2ecc71" 
+                                 aria-valuenow="1.93" 
+                                 aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </td>
+                      </tr>
+                      
+                      <tr>
+                        <td>
+                          <div class="d-flex align-items-center">
+                            <div class="ancestry-color-dot me-2" style="background-color: #f39c12"></div>
+                            <span>南亚 (SAS)</span>
+                          </div>
+                        </td>
+                        <td class="fw-bold">0.88%</td>
+                        <td>
+                          <div class="progress" style="height: 12px;">
+                            <div class="progress-bar" role="progressbar" 
+                                 style="width: 0.88%; background-color: #f39c12" 
+                                 aria-valuenow="0.88" 
+                                 aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </td>
+                      </tr>
+                      
+                      <tr>
+                        <td>
+                          <div class="d-flex align-items-center">
+                            <div class="ancestry-color-dot me-2" style="background-color: #9b59b6"></div>
+                            <span>欧洲 (EUR)</span>
+                          </div>
+                        </td>
+                        <td class="fw-bold">0.16%</td>
+                        <td>
+                          <div class="progress" style="height: 12px;">
+                            <div class="progress-bar" role="progressbar" 
+                                 style="width: 0.16%; background-color: #9b59b6" 
+                                 aria-valuenow="0.16" 
+                                 aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </td>
+                      </tr>
+                      
+                    
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-6">
+          <div class="card detail-card h-100">
+            <div class="card-header bg-gradient-success text-white">
+              <div class="d-flex align-items-center">
+                <i class="fas fa-map-marked-alt me-2"></i>
+                <h6 class="mb-0">区域细分分析</h6>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-sm table-hover">
+                  <thead class="table-light">
+                    <tr>
+                      <th>民族</th>
+                      <th>比例</th>
+                      <th>可视化</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    
+                      
+                      <tr>
+                        <td>
+                          <div class="d-flex align-items-center">
+                            <div class="ancestry-subgroup-icon me-2">
+                              <i class="fas fa-users"></i>
+                            </div>
+                            <span>汉族</span>
+                          </div>
+                        </td>
+                        <td class="fw-bold">86.73%</td>
+                        <td>
+                          <div class="progress" style="height: 12px;">
+                            <div class="progress-bar bg-success" role="progressbar" 
+                                 style="width: 86.73%; opacity: 0.6" 
+                                 aria-valuenow="86.73" 
+                                 aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </td>
+                      </tr>
+                      
+                      <tr>
+                        <td>
+                          <div class="d-flex align-items-center">
+                            <div class="ancestry-subgroup-icon me-2">
+                              <i class="fas fa-users"></i>
+                            </div>
+                            <span>壮族</span>
+                          </div>
+                        </td>
+                        <td class="fw-bold">5.42%</td>
+                        <td>
+                          <div class="progress" style="height: 12px;">
+                            <div class="progress-bar bg-success" role="progressbar" 
+                                 style="width: 5.42%; opacity: 0.7" 
+                                 aria-valuenow="5.42" 
+                                 aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </td>
+                      </tr>
+                      
+                      <tr>
+                        <td>
+                          <div class="d-flex align-items-center">
+                            <div class="ancestry-subgroup-icon me-2">
+                              <i class="fas fa-users"></i>
+                            </div>
+                            <span>苗族</span>
+                          </div>
+                        </td>
+                        <td class="fw-bold">1.85%</td>
+                        <td>
+                          <div class="progress" style="height: 12px;">
+                            <div class="progress-bar bg-success" role="progressbar" 
+                                 style="width: 1.85%; opacity: 0.8" 
+                                 aria-valuenow="1.85" 
+                                 aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </td>
+                      </tr>
+                      
+                      <tr>
+                        <td>
+                          <div class="d-flex align-items-center">
+                            <div class="ancestry-subgroup-icon me-2">
+                              <i class="fas fa-users"></i>
+                            </div>
+                            <span>满族</span>
+                          </div>
+                        </td>
+                        <td class="fw-bold">0.40%</td>
+                        <td>
+                          <div class="progress" style="height: 12px;">
+                            <div class="progress-bar bg-success" role="progressbar" 
+                                 style="width: 0.4%; opacity: 0.9" 
+                                 aria-valuenow="0.4" 
+                                 aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </td>
+                      </tr>
+                      
+                    
+                  </tbody>
+                </table>
+              </div>
+              
+              <div class="mt-3 small bg-light p-2 rounded">
+                <i class="fas fa-lightbulb me-1 text-warning"></i>
+                <span>祖源分析基于全基因组数据与参考人群的对比。</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 疾病风险评估部分 -->
+    <div class="report-section" id="risk-assessment-section">
+      <h3 class="section-title">
+        <i class="fas fa-chart-line me-2"></i> 疾病风险评估与早期筛查
+      </h3>
+
+      <div class="alert alert-info mb-4">
+        <div class="d-flex">
+          <div class="me-3">
+            <i class="fas fa-info-circle fa-2x"></i>
+          </div>
+          <div>
+            <h5 class="alert-heading">关于风险评估</h5>
+            <p class="mb-0">本报告结合基因组学和蛋白质组学数据，为您提供疾病易感性和风险评估结果。基因组数据反映终身遗传易感性（从"极不易感"到"高度易感"），蛋白质组数据反映当前健康风险（从"低风险"到"高风险"）。请点击"查看详情"了解更多科学依据和预防建议。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 疾病风险列表 -->
+      
+        
+        <div class="card detail-card mb-3">
+          <div class="card-header d-flex justify-content-between align-items-center py-3">
+            <div>
+              <span class="badge bg-success">肿瘤性疾病</span>
+              <span class="ms-2 fw-bold fs-5">唇恶性肿瘤</span>
+            </div>
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-risk-0" aria-expanded="false" aria-controls="collapse-risk-0">查看详情</button>
+          </div>
+          
+          <div class="card-body collapse-summary-0">
+            <div class="row">
+              <div class="col-md-3">
+                <div class="d-flex align-items-center mb-2">
+                  <div class="risk-indicator risk-very-low">
+                    <i class="fas fa-smile"></i>
+                  </div>
+                  <span class="fw-bold">基因组易感性:</span>
+                  <span class="ms-2">
+                    极不易感
+                    
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="d-flex align-items-center mb-2">
+                  <div class="risk-indicator risk-very-low">
+                    <i class="fas fa-thumbs-up"></i>
+                  </div>
+                  <span class="fw-bold">蛋白质组风险:</span>
+                  <span class="ms-2">
+                    低风险
+                    
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="d-flex align-items-center mb-2">
+                  <i class="fas fa-dna me-2 text-secondary"></i>
+                  <span class="fw-bold">相关基因:</span>
+                  <span class="ms-2">
+                    
+                      
+                        <span>TPSG1, </span>
+                      
+                        <span>TPSG1, </span>
+                      
+                        <span>CSRP2, </span>
+                      
+                        <span>MUC22</span>
+                      
+                    
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="collapse-risk-0" class="collapse">
+            <div class="card-body">
+              <p class="mb-3">唇恶性肿瘤是一种起源于唇部上皮组织的恶性肿瘤，常见类型为鳞状细胞癌。其发病与长期日晒、烟草使用、饮酒以及人乳头瘤病毒（HPV）感染等因素相关。早期症状包括唇部溃疡、硬结或持续性疼痛。</p>
+              
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <div class="card">
+                    <div class="card-header py-2 table-header">
+                      <div class="d-flex align-items-center">
+                        <div class="risk-indicator risk-very-low" 
+                             onclick="showRiskLevelTooltip('genomic', 0.02)"
+                             style="cursor: pointer;" 
+                             title="点击查看风险级别说明">
+                          <i class="fas fa-smile"></i>
+                        </div>
+                        <span class="fw-bold">基因组易感性评估</span>
+                        <span class="ms-auto">
+                          极不易感
+                          
+                        </span>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <h6 class="card-subtitle mb-2 text-muted">科学依据</h6>
+                      <p class="card-text">您的基因组数据显示与唇部恶性肿瘤相关的遗传易感位点较少，仅在DNA修复相关基因中检测到轻微变异。这表明您在遗传层面罹患唇部恶性肿瘤的风险较低。</p>
+                      
+                      <h6 class="card-subtitle mb-2 text-muted">部分相关基因变异</h6>
+                      <div class="d-flex flex-wrap mb-3">
+                        
+                          
+                          <a href="https://www.ncbi.nlm.nih.gov/datasets/gene/25823" target="_blank" class="gene-badge text-decoration-none">
+                            <span>TPSG1</span>
+                            <span class="ms-1 small">16-1222038-G-A</span>
+                          </a>
+                          
+                          <a href="https://www.ncbi.nlm.nih.gov/datasets/gene/25823" target="_blank" class="gene-badge text-decoration-none">
+                            <span>TPSG1</span>
+                            <span class="ms-1 small">16-1222865-G-A</span>
+                          </a>
+                          
+                          <a href="https://www.ncbi.nlm.nih.gov/datasets/gene/1466" target="_blank" class="gene-badge text-decoration-none">
+                            <span>CSRP2</span>
+                            <span class="ms-1 small">12-76862901-T-G</span>
+                          </a>
+                          
+                          <a href="https://www.ncbi.nlm.nih.gov/datasets/gene/100507679" target="_blank" class="gene-badge text-decoration-none">
+                            <span>MUC22</span>
+                            <span class="ms-1 small">6-31028355-C-T</span>
+                          </a>
+                          
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="col-md-6">
+                  <div class="card">
+                    <div class="card-header py-2 table-header">
+                      <div class="d-flex align-items-center">
+                        <div class="risk-indicator risk-very-low" 
+                             onclick="showRiskLevelTooltip('proteomic', 0.03)"
+                             style="cursor: pointer;" 
+                             title="点击查看风险级别说明">
+                          <i class="fas fa-thumbs-up"></i>
+                        </div>
+                        <span class="fw-bold">蛋白质组风险评估</span>
+                        <span class="ms-auto">
+                          低风险
+                          
+                        </span>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <h6 class="card-subtitle mb-2 text-muted">检测结果</h6>
+                      <p class="card-text">您的蛋白质组数据未见明显的异常。当前无明显癌变相关信号。</p>
+                      
+                      <h6 class="card-subtitle mb-2 text-muted">部分相关蛋白标志物</h6>
+                      <table class="table table-sm">
+                        <thead>
+                          <tr>
+                            <th>蛋白质</th>
+                            <th>变化情况</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          
+                            
+                            <tr>
+                              <td>
+                                <a href="https://www.uniprot.org/uniprotkb/" target="_blank" class="text-decoration-none">
+                                  <span>脱氧核苷三磷酸水解酶SAMHD1</span>
+                                </a>
+                              </td>
+                              <td>
+                                <span class="text-success">
+                                  正常
+                                </span>
+                              </td>
+                            </tr>
+                            
+                            <tr>
+                              <td>
+                                <a href="https://www.uniprot.org/uniprotkb/" target="_blank" class="text-decoration-none">
+                                  <span>泛素样蛋白ISG15</span>
+                                </a>
+                              </td>
+                              <td>
+                                <span class="text-success">
+                                  正常
+                                </span>
+                              </td>
+                            </tr>
+                            
+                            <tr>
+                              <td>
+                                <a href="https://www.uniprot.org/uniprotkb/" target="_blank" class="text-decoration-none">
+                                  <span>2&#39;-5&#39;-寡腺苷酸合酶2(OAS2)</span>
+                                </a>
+                              </td>
+                              <td>
+                                <span class="text-success">
+                                  正常
+                                </span>
+                              </td>
+                            </tr>
+                            
+                          
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="evidence-section">
+                <h5 class="mb-3">
+                  <i class="fas fa-stethoscope me-2"></i> 医疗建议
+                </h5>
+                <p class="mb-0">建议保持良好的口腔卫生，避免吸烟和过量饮酒，减少日晒时的唇部暴露，可使用防晒唇膏。若出现唇部长期不愈合的溃疡或硬结，应及时就医检查。每年进行一次口腔和头颈部体检，以早期发现潜在病变。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card detail-card mb-3">
+          <div class="card-header d-flex justify-content-between align-items-center py-3">
+            <div>
+              <span class="badge bg-danger">肿瘤性疾病</span>
+              <span class="ms-2 fw-bold fs-5">小肠恶性肿瘤</span>
+            </div>
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-risk-1" aria-expanded="false" aria-controls="collapse-risk-1">查看详情</button>
+          </div>
+          
+          <div class="card-body collapse-summary-1">
+            <div class="row">
+              <div class="col-md-3">
+                <div class="d-flex align-items-center mb-2">
+                  <div class="risk-indicator risk-very-high">
+                    <i class="fas fa-exclamation-triangle"></i>
+                  </div>
+                  <span class="fw-bold">基因组易感性:</span>
+                  <span class="ms-2">
+                    高度易感
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="d-flex align-items-center mb-2">
+                  <div class="risk-indicator risk-very-low">
+                    <i class="fas fa-thumbs-up"></i>
+                  </div>
+                  <span class="fw-bold">蛋白质组风险:</span>
+                  <span class="ms-2">
+                    低风险
+                    
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="d-flex align-items-center mb-2">
+                  <i class="fas fa-dna me-2 text-secondary"></i>
+                  <span class="fw-bold">相关基因:</span>
+                  <span class="ms-2">
+                    
+                      
+                        <span>ZNF493, </span>
+                      
+                        <span>C6orf10, </span>
+                      
+                        <span>PLSCR2</span>
+                      
+                    
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="collapse-risk-1" class="collapse">
+            <div class="card-body">
+              <p class="mb-3">小肠恶性肿瘤是一种起源于小肠组织的恶性肿瘤，常见类型包括腺癌、平滑肌肉瘤和神经内分泌肿瘤。其发病与遗传因素、慢性炎症、饮食习惯等因素相关。早期症状可能包括腹痛、体重减轻和消化不良。</p>
+              
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <div class="card">
+                    <div class="card-header py-2 table-header">
+                      <div class="d-flex align-items-center">
+                        <div class="risk-indicator risk-very-high" 
+                             onclick="showRiskLevelTooltip('genomic', 0.8)"
+                             style="cursor: pointer;" 
+                             title="点击查看风险级别说明">
+                          <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <span class="fw-bold">基因组易感性评估</span>
+                        <span class="ms-auto">
+                          高度易感
+                        </span>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <h6 class="card-subtitle mb-2 text-muted">科学依据</h6>
+                      <p class="card-text">您的基因组检测显示在多个与小肠肿瘤发生相关的基因（如ZNF493、C6orf10和PLSCR2）中存在潜在功能变异，这些基因涉及DNA修复、细胞信号转导及增殖调控，提示存在一定的遗传易感性。</p>
+                      
+                      <h6 class="card-subtitle mb-2 text-muted">部分相关基因变异</h6>
+                      <div class="d-flex flex-wrap mb-3">
+                        
+                          
+                          <a href="https://www.ncbi.nlm.nih.gov/datasets/gene/284443" target="_blank" class="gene-badge text-decoration-none">
+                            <span>ZNF493</span>
+                            <span class="ms-1 small">19-21423627-G-T</span>
+                          </a>
+                          
+                          <a href="https://www.ncbi.nlm.nih.gov/datasets/gene/10665" target="_blank" class="gene-badge text-decoration-none">
+                            <span>C6orf10</span>
+                            <span class="ms-1 small">6-32366178-T-C</span>
+                          </a>
+                          
+                          <a href="https://www.ncbi.nlm.nih.gov/datasets/gene/57047" target="_blank" class="gene-badge text-decoration-none">
+                            <span>PLSCR2</span>
+                            <span class="ms-1 small">3-146460028-C-T</span>
+                          </a>
+                          
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="col-md-6">
+                  <div class="card">
+                    <div class="card-header py-2 table-header">
+                      <div class="d-flex align-items-center">
+                        <div class="risk-indicator risk-very-low" 
+                             onclick="showRiskLevelTooltip('proteomic', 0.04)"
+                             style="cursor: pointer;" 
+                             title="点击查看风险级别说明">
+                          <i class="fas fa-thumbs-up"></i>
+                        </div>
+                        <span class="fw-bold">蛋白质组风险评估</span>
+                        <span class="ms-auto">
+                          低风险
+                          
+                        </span>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <h6 class="card-subtitle mb-2 text-muted">检测结果</h6>
+                      <p class="card-text">蛋白质组结果显示小肠相关蛋白表达总体正常，目前未见肿瘤活动的分子证据，但仍需关注潜在的早期风险。</p>
+                      
+                      <h6 class="card-subtitle mb-2 text-muted">部分相关蛋白标志物</h6>
+                      <table class="table table-sm">
+                        <thead>
+                          <tr>
+                            <th>蛋白质</th>
+                            <th>变化情况</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          
+                            
+                            <tr>
+                              <td>
+                                <a href="https://www.uniprot.org/uniprotkb/" target="_blank" class="text-decoration-none">
+                                  <span>DCTN6</span>
+                                </a>
+                              </td>
+                              <td>
+                                <span class="text-success">
+                                  正常
+                                </span>
+                              </td>
+                            </tr>
+                            
+                            <tr>
+                              <td>
+                                <a href="https://www.uniprot.org/uniprotkb/" target="_blank" class="text-decoration-none">
+                                  <span>C-X-C motif chemokine 17(CXCL17)</span>
+                                </a>
+                              </td>
+                              <td>
+                                <span class="text-success">
+                                  正常
+                                </span>
+                              </td>
+                            </tr>
+                            
+                            <tr>
+                              <td>
+                                <a href="https://www.uniprot.org/uniprotkb/" target="_blank" class="text-decoration-none">
+                                  <span>Alpha-actinin-4</span>
+                                </a>
+                              </td>
+                              <td>
+                                <span class="text-success">
+                                  正常
+                                </span>
+                              </td>
+                            </tr>
+                            
+                          
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="evidence-section">
+                <h5 class="mb-3">
+                  <i class="fas fa-stethoscope me-2"></i> 医疗建议
+                </h5>
+                <p class="mb-0">建议保持规律饮食与良好的肠道健康，避免高脂、高温或刺激性食物摄入；可每年进行腹部影像学检查（如B超或CT）及肠道功能评估；若出现持续腹痛、体重减轻或消化不良，应及时就医并考虑进行小肠镜或相关影像学检查。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card detail-card mb-3">
+          <div class="card-header d-flex justify-content-between align-items-center py-3">
+            <div>
+              <span class="badge bg-success">肿瘤性疾病</span>
+              <span class="ms-2 fw-bold fs-5">直肠恶性肿瘤</span>
+            </div>
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-risk-2" aria-expanded="false" aria-controls="collapse-risk-2">查看详情</button>
+          </div>
+          
+          <div class="card-body collapse-summary-2">
+            <div class="row">
+              <div class="col-md-3">
+                <div class="d-flex align-items-center mb-2">
+                  <div class="risk-indicator risk-very-low">
+                    <i class="fas fa-smile"></i>
+                  </div>
+                  <span class="fw-bold">基因组易感性:</span>
+                  <span class="ms-2">
+                    极不易感
+                    
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="d-flex align-items-center mb-2">
+                  <div class="risk-indicator risk-very-low">
+                    <i class="fas fa-thumbs-up"></i>
+                  </div>
+                  <span class="fw-bold">蛋白质组风险:</span>
+                  <span class="ms-2">
+                    低风险
+                    
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="d-flex align-items-center mb-2">
+                  <i class="fas fa-dna me-2 text-secondary"></i>
+                  <span class="fw-bold">相关基因:</span>
+                  <span class="ms-2">
+                    
+                      
+                        <span>MYO3B, </span>
+                      
+                        <span>NCAM1, </span>
+                      
+                        <span>LAMA5</span>
+                      
+                    
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="collapse-risk-2" class="collapse">
+            <div class="card-body">
+              <p class="mb-3">直肠恶性肿瘤，即直肠癌，是结直肠癌的一种，指发生在直肠（大肠的最后部分）的癌症，早期可能无症状，但随着病情进展会出现便血、排便习惯改变、腹痛、体重减轻和疲劳等症状。许多病例起源于良性息肉，通过定期筛查，尤其在早期发现和治疗，治愈率很高。治疗方法主要包括手术、化疗和放疗，具体方案取决于癌症的分期和患者情况。</p>
+              
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <div class="card">
+                    <div class="card-header py-2 table-header">
+                      <div class="d-flex align-items-center">
+                        <div class="risk-indicator risk-very-low" 
+                             onclick="showRiskLevelTooltip('genomic', 0.16)"
+                             style="cursor: pointer;" 
+                             title="点击查看风险级别说明">
+                          <i class="fas fa-smile"></i>
+                        </div>
+                        <span class="fw-bold">基因组易感性评估</span>
+                        <span class="ms-auto">
+                          极不易感
+                          
+                        </span>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <h6 class="card-subtitle mb-2 text-muted">科学依据</h6>
+                      <p class="card-text">您的基因组分析显示与直肠癌相关的关键基因（MYO3B、NCAM1、LAMA5）存在轻度变异，这些基因参与细胞黏附、信号转导及细胞骨架调控，但未发现已知高风险致病突变，提示遗传易感性较低。</p>
+                      
+                      <h6 class="card-subtitle mb-2 text-muted">部分相关基因变异</h6>
+                      <div class="d-flex flex-wrap mb-3">
+                        
+                          
+                          <a href="https://www.ncbi.nlm.nih.gov/datasets/gene/140469" target="_blank" class="gene-badge text-decoration-none">
+                            <span>MYO3B</span>
+                            <span class="ms-1 small">2-170369331-A-G</span>
+                          </a>
+                          
+                          <a href="https://www.ncbi.nlm.nih.gov/datasets/gene/4684" target="_blank" class="gene-badge text-decoration-none">
+                            <span>NCAM1</span>
+                            <span class="ms-1 small">11-113240779-T-C</span>
+                          </a>
+                          
+                          <a href="https://www.ncbi.nlm.nih.gov/datasets/gene/3911" target="_blank" class="gene-badge text-decoration-none">
+                            <span>LAMA5</span>
+                            <span class="ms-1 small">20-62323449-C-T</span>
+                          </a>
+                          
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="col-md-6">
+                  <div class="card">
+                    <div class="card-header py-2 table-header">
+                      <div class="d-flex align-items-center">
+                        <div class="risk-indicator risk-very-low" 
+                             onclick="showRiskLevelTooltip('proteomic', 0.04)"
+                             style="cursor: pointer;" 
+                             title="点击查看风险级别说明">
+                          <i class="fas fa-thumbs-up"></i>
+                        </div>
+                        <span class="fw-bold">蛋白质组风险评估</span>
+                        <span class="ms-auto">
+                          低风险
+                          
+                        </span>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <h6 class="card-subtitle mb-2 text-muted">检测结果</h6>
+                      <p class="card-text">您的蛋白质组检测结果显示直肠肿瘤相关蛋白水平均在正常范围内，未见明显异常表达，提示当前无显著癌变或炎症相关信号。</p>
+                      
+                      <h6 class="card-subtitle mb-2 text-muted">部分相关蛋白标志物</h6>
+                      <table class="table table-sm">
+                        <thead>
+                          <tr>
+                            <th>蛋白质</th>
+                            <th>变化情况</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          
+                            
+                            <tr>
+                              <td>
+                                <a href="https://www.uniprot.org/uniprotkb/" target="_blank" class="text-decoration-none">
+                                  <span>Growth/differentiation factor 15(GDF15)</span>
+                                </a>
+                              </td>
+                              <td>
+                                <span class="text-success">
+                                  正常
+                                </span>
+                              </td>
+                            </tr>
+                            
+                            <tr>
+                              <td>
+                                <a href="https://www.uniprot.org/uniprotkb/" target="_blank" class="text-decoration-none">
+                                  <span>C-X-C motif chemokine 14(CXCL14)</span>
+                                </a>
+                              </td>
+                              <td>
+                                <span class="text-success">
+                                  正常
+                                </span>
+                              </td>
+                            </tr>
+                            
+                            <tr>
+                              <td>
+                                <a href="https://www.uniprot.org/uniprotkb/" target="_blank" class="text-decoration-none">
+                                  <span>五聚蛋白相关蛋白PTX3</span>
+                                </a>
+                              </td>
+                              <td>
+                                <span class="text-success">
+                                  正常
+                                </span>
+                              </td>
+                            </tr>
+                            
+                          
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="evidence-section">
+                <h5 class="mb-3">
+                  <i class="fas fa-stethoscope me-2"></i> 医疗建议
+                </h5>
+                <p class="mb-0">建议保持规律饮食与健康生活方式，增加膳食纤维摄入，减少高脂和加工肉类食品；45岁以上或有家族史者应定期进行结直肠癌筛查（如粪便潜血检测或肠镜）；若出现持续便血、排便习惯改变或腹痛，应及时就医进行进一步评估。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card detail-card mb-3">
+          <div class="card-header d-flex justify-content-between align-items-center py-3">
+            <div>
+              <span class="badge bg-success">肿瘤性疾病</span>
+              <span class="ms-2 fw-bold fs-5">胆囊恶性肿瘤</span>
+            </div>
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-risk-3" aria-expanded="false" aria-controls="collapse-risk-3">查看详情</button>
+          </div>
+          
+          <div class="card-body collapse-summary-3">
+            <div class="row">
+              <div class="col-md-3">
+                <div class="d-flex align-items-center mb-2">
+                  <div class="risk-indicator risk-very-low">
+                    <i class="fas fa-smile"></i>
+                  </div>
+                  <span class="fw-bold">基因组易感性:</span>
+                  <span class="ms-2">
+                    极不易感
+                    
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="d-flex align-items-center mb-2">
+                  <div class="risk-indicator risk-very-low">
+                    <i class="fas fa-thumbs-up"></i>
+                  </div>
+                  <span class="fw-bold">蛋白质组风险:</span>
+                  <span class="ms-2">
+                    低风险
+                    
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="d-flex align-items-center mb-2">
+                  <i class="fas fa-dna me-2 text-secondary"></i>
+                  <span class="fw-bold">相关基因:</span>
+                  <span class="ms-2">
+                    
+                      
+                        <span>RPS16, </span>
+                      
+                        <span>PYGB, </span>
+                      
+                        <span>RPSA</span>
+                      
+                    
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="collapse-risk-3" class="collapse">
+            <div class="card-body">
+              <p class="mb-3">胆囊恶性肿瘤（胆囊癌）是一种起源于胆囊的恶性肿瘤，发病率较低但预后通常不佳，早期症状不明显，常在胆囊结石手术或因症状就医时偶然发现。其症状包括腹部右上角疼痛、腹胀、不明原因的体重减轻、黄疸等。诊断方法包括影像学检查和肿瘤标志物检测。治疗首选手术，若癌症已扩散，可能需要更广泛的手术、放疗或化疗。</p>
+              
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <div class="card">
+                    <div class="card-header py-2 table-header">
+                      <div class="d-flex align-items-center">
+                        <div class="risk-indicator risk-very-low" 
+                             onclick="showRiskLevelTooltip('genomic', 0.0095)"
+                             style="cursor: pointer;" 
+                             title="点击查看风险级别说明">
+                          <i class="fas fa-smile"></i>
+                        </div>
+                        <span class="fw-bold">基因组易感性评估</span>
+                        <span class="ms-auto">
+                          极不易感
+                          
+                        </span>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <h6 class="card-subtitle mb-2 text-muted">科学依据</h6>
+                      <p class="card-text">您的基因组检测显示与胆囊癌相关的基因中仅存在轻微变异，且存在降低患病风险的突变。未发现已知高风险致病突变，提示遗传易感性极低。</p>
+                      
+                      <h6 class="card-subtitle mb-2 text-muted">部分相关基因变异</h6>
+                      <div class="d-flex flex-wrap mb-3">
+                        
+                          
+                          <a href="https://www.ncbi.nlm.nih.gov/datasets/gene/6217" target="_blank" class="gene-badge text-decoration-none">
+                            <span>RPS16</span>
+                            <span class="ms-1 small">19-39435881-G-A</span>
+                          </a>
+                          
+                          <a href="https://www.ncbi.nlm.nih.gov/datasets/gene/5834" target="_blank" class="gene-badge text-decoration-none">
+                            <span>PYGB</span>
+                            <span class="ms-1 small">20-25280295-A-G</span>
+                          </a>
+                          
+                          <a href="https://www.ncbi.nlm.nih.gov/datasets/gene/3921" target="_blank" class="gene-badge text-decoration-none">
+                            <span>RPSA</span>
+                            <span class="ms-1 small">3-39411669-G-A</span>
+                          </a>
+                          
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="col-md-6">
+                  <div class="card">
+                    <div class="card-header py-2 table-header">
+                      <div class="d-flex align-items-center">
+                        <div class="risk-indicator risk-very-low" 
+                             onclick="showRiskLevelTooltip('proteomic', 0.04)"
+                             style="cursor: pointer;" 
+                             title="点击查看风险级别说明">
+                          <i class="fas fa-thumbs-up"></i>
+                        </div>
+                        <span class="fw-bold">蛋白质组风险评估</span>
+                        <span class="ms-auto">
+                          低风险
+                          
+                        </span>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <h6 class="card-subtitle mb-2 text-muted">检测结果</h6>
+                      <p class="card-text">您的蛋白质组检测结果显示胆囊相关蛋白总体正常，其中IGFBP3和MUC13水平正常，TNR27略低，但未显示明显的肿瘤活动或异常信号，提示当前无显著癌变迹象。</p>
+                      
+                      <h6 class="card-subtitle mb-2 text-muted">部分相关蛋白标志物</h6>
+                      <table class="table table-sm">
+                        <thead>
+                          <tr>
+                            <th>蛋白质</th>
+                            <th>变化情况</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          
+                            
+                            <tr>
+                              <td>
+                                <a href="https://www.uniprot.org/uniprotkb/" target="_blank" class="text-decoration-none">
+                                  <span>胰岛素样生长因子结合蛋白3(IGFBP3)</span>
+                                </a>
+                              </td>
+                              <td>
+                                <span class="text-success">
+                                  正常
+                                </span>
+                              </td>
+                            </tr>
+                            
+                            <tr>
+                              <td>
+                                <a href="https://www.uniprot.org/uniprotkb/" target="_blank" class="text-decoration-none">
+                                  <span>肿瘤坏死因子受体超家族成员27(TNR27)</span>
+                                </a>
+                              </td>
+                              <td>
+                                <span class="text-warning">
+                                  略低
+                                </span>
+                              </td>
+                            </tr>
+                            
+                            <tr>
+                              <td>
+                                <a href="https://www.uniprot.org/uniprotkb/" target="_blank" class="text-decoration-none">
+                                  <span>粘蛋白-13(MUC13)</span>
+                                </a>
+                              </td>
+                              <td>
+                                <span class="text-success">
+                                  正常
+                                </span>
+                              </td>
+                            </tr>
+                            
+                          
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="evidence-section">
+                <h5 class="mb-3">
+                  <i class="fas fa-stethoscope me-2"></i> 医疗建议
+                </h5>
+                <p class="mb-0">建议保持健康饮食，避免高脂、高胆固醇饮食，定期进行腹部超声检查，尤其在有胆囊结石或家族史情况下；如出现持续右上腹疼痛、黄疸或体重减轻，应及时就医进行进一步影像学和实验室检查。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card detail-card mb-3">
+          <div class="card-header d-flex justify-content-between align-items-center py-3">
+            <div>
+              <span class="badge bg-success">血液及造血器官疾病</span>
+              <span class="ms-2 fw-bold fs-5">维生素B12缺乏性贫血</span>
+            </div>
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-risk-4" aria-expanded="false" aria-controls="collapse-risk-4">查看详情</button>
+          </div>
+          
+          <div class="card-body collapse-summary-4">
+            <div class="row">
+              <div class="col-md-3">
+                <div class="d-flex align-items-center mb-2">
+                  <div class="risk-indicator risk-very-low">
+                    <i class="fas fa-smile"></i>
+                  </div>
+                  <span class="fw-bold">基因组易感性:</span>
+                  <span class="ms-2">
+                    极不易感
+                    
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="d-flex align-items-center mb-2">
+                  <div class="risk-indicator risk-very-low">
+                    <i class="fas fa-thumbs-up"></i>
+                  </div>
+                  <span class="fw-bold">蛋白质组风险:</span>
+                  <span class="ms-2">
+                    低风险
+                    
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="d-flex align-items-center mb-2">
+                  <i class="fas fa-dna me-2 text-secondary"></i>
+                  <span class="fw-bold">相关基因:</span>
+                  <span class="ms-2">
+                    
+                      
+                        <span>ARPC2, </span>
+                      
+                        <span>KLHL26, </span>
+                      
+                        <span>TRPA1</span>
+                      
+                    
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="collapse-risk-4" class="collapse">
+            <div class="card-body">
+              <p class="mb-3">维生素B12缺乏性贫血是由于体内缺乏维生素B12导致红细胞生成异常的一种贫血。患者会感到疲劳、虚弱、皮肤苍白，并且可能出现神经系统症状，如手脚刺痛、麻木、平衡问题以及认知障碍等。治疗主要通过补充维生素B12，可以通过口服、注射、鼻喷剂等方式进行。</p>
+              
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <div class="card">
+                    <div class="card-header py-2 table-header">
+                      <div class="d-flex align-items-center">
+                        <div class="risk-indicator risk-very-low" 
+                             onclick="showRiskLevelTooltip('genomic', 0.03)"
+                             style="cursor: pointer;" 
+                             title="点击查看风险级别说明">
+                          <i class="fas fa-smile"></i>
+                        </div>
+                        <span class="fw-bold">基因组易感性评估</span>
+                        <span class="ms-auto">
+                          极不易感
+                          
+                        </span>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <h6 class="card-subtitle mb-2 text-muted">科学依据</h6>
+                      <p class="card-text">您的基因组分析显示与维生素B12缺乏性贫血相关的基因存在轻度变异，但未发现已知高风险致病突变，提示遗传易感性较低。</p>
+                      
+                      <h6 class="card-subtitle mb-2 text-muted">部分相关基因变异</h6>
+                      <div class="d-flex flex-wrap mb-3">
+                        
+                          
+                          <a href="https://www.ncbi.nlm.nih.gov/datasets/gene/10109" target="_blank" class="gene-badge text-decoration-none">
+                            <span>ARPC2</span>
+                            <span class="ms-1 small">2-218238857-A-G</span>
+                          </a>
+                          
+                          <a href="https://www.ncbi.nlm.nih.gov/datasets/gene/55295" target="_blank" class="gene-badge text-decoration-none">
+                            <span>KLHL26</span>
+                            <span class="ms-1 small">19-18667635-C-G</span>
+                          </a>
+                          
+                          <a href="https://www.ncbi.nlm.nih.gov/datasets/gene/8989" target="_blank" class="gene-badge text-decoration-none">
+                            <span>TRPA1</span>
+                            <span class="ms-1 small">8-72069092-A-G</span>
+                          </a>
+                          
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="col-md-6">
+                  <div class="card">
+                    <div class="card-header py-2 table-header">
+                      <div class="d-flex align-items-center">
+                        <div class="risk-indicator risk-very-low" 
+                             onclick="showRiskLevelTooltip('proteomic', 0.04)"
+                             style="cursor: pointer;" 
+                             title="点击查看风险级别说明">
+                          <i class="fas fa-thumbs-up"></i>
+                        </div>
+                        <span class="fw-bold">蛋白质组风险评估</span>
+                        <span class="ms-auto">
+                          低风险
+                          
+                        </span>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <h6 class="card-subtitle mb-2 text-muted">检测结果</h6>
+                      <p class="card-text">您的蛋白质组检测结果显示B12代谢相关蛋白水平均在正常范围，未见明显异常，提示目前无分子层面的贫血信号。</p>
+                      
+                      <h6 class="card-subtitle mb-2 text-muted">部分相关蛋白标志物</h6>
+                      <table class="table table-sm">
+                        <thead>
+                          <tr>
+                            <th>蛋白质</th>
+                            <th>变化情况</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          
+                            
+                            <tr>
+                              <td>
+                                <a href="https://www.uniprot.org/uniprotkb/" target="_blank" class="text-decoration-none">
+                                  <span>钴胺素结合内因子(CBLIF)</span>
+                                </a>
+                              </td>
+                              <td>
+                                <span class="text-success">
+                                  正常
+                                </span>
+                              </td>
+                            </tr>
+                            
+                            <tr>
+                              <td>
+                                <a href="https://www.uniprot.org/uniprotkb/" target="_blank" class="text-decoration-none">
+                                  <span>生长/分化因子15(GDF15)</span>
+                                </a>
+                              </td>
+                              <td>
+                                <span class="text-success">
+                                  正常
+                                </span>
+                              </td>
+                            </tr>
+                            
+                            <tr>
+                              <td>
+                                <a href="https://www.uniprot.org/uniprotkb/" target="_blank" class="text-decoration-none">
+                                  <span>胃蛋白酶A-4(PGA4)</span>
+                                </a>
+                              </td>
+                              <td>
+                                <span class="text-success">
+                                  正常
+                                </span>
+                              </td>
+                            </tr>
+                            
+                          
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="evidence-section">
+                <h5 class="mb-3">
+                  <i class="fas fa-stethoscope me-2"></i> 医疗建议
+                </h5>
+                <p class="mb-0">建议保持均衡饮食，摄入足够的维生素B12（如动物肝脏、鱼类、奶制品、蛋类）；如存在素食习惯，可考虑B12补充剂；若出现乏力、皮肤苍白、手脚麻木或认知障碍，应及时就医进行血液检查和必要的维生素B12检测。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      
+    </div>
+
+    <!-- 药物基因组学分析部分 -->
+    <div class="report-section" id="medication-section">
+      <h3 class="section-title">
+        <i class="fas fa-pills me-2"></i> 药物基因组学分析
+      </h3>
+
+      <div class="alert alert-info mb-4">
+        <div class="d-flex">
+          <div class="me-3">
+            <i class="fas fa-info-circle fa-2x"></i>
+          </div>
+          <div>
+            <h5 class="alert-heading">个体化用药指导</h5>
+            <p class="mb-0">药物基因组学分析基于个人基因型，评估药物代谢酶、转运体和靶点基因的变异，为个体化用药提供参考。请在医生指导下调整用药方案。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 药物列表 -->
+      
+        
+        <div class="card detail-card mb-3">
+          <div class="card-header d-flex justify-content-between align-items-center py-3">
+            <div>
+              <span class="badge bg-secondary">重度忧郁症和各种疼痛症候群，如神经性疼痛、纤维肌痛、偏头痛和紧缩型头痛</span>
+              <span class="ms-2 fw-bold fs-5">阿米替林</span>
+            </div>
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-med-0" aria-expanded="false" aria-controls="collapse-med-0">查看详情</button>
+          </div>
+          <div id="collapse-med-0" class="collapse">
+            <div class="card-body">
+              <div class="mb-3">
+                <div class="d-flex">
+                  <strong class="me-3">适应症/靶向疾病:</strong>
+                  <span class="tab-spacer"></span>
+                  <span>重度忧郁症和各种疼痛症候群，如神经性疼痛、纤维肌痛、偏头痛和紧缩型头痛</span>
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <div class="d-flex align-items-center">
+                  <strong class="me-3">相关基因:</strong>
+                  <span class="tab-spacer"></span>
+                  <div class="d-flex flex-wrap">
+                    
+                      
+                      <a href="#" class="gene-badge text-decoration-none me-2 mb-2" onclick="showGeneInfo({name: 'CYP2C19', variant: '*3/*3', phenotype: '叔胺代谢大大降低'})">
+                        <span>CYP2C19</span>
+                        <span class="small ms-1">*3/*3</span>
+                        <span class="small ms-1 text-muted">(叔胺代谢大大降低)</span>
+                      </a>
+                      
+                    
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <div class="d-flex">
+                  <strong class="me-3">用药建议:</strong>
+                  <span class="tab-spacer"></span>
+                  <span>避免使用叔胺类药物，因为其可能降低疗效。考虑使用非CYP2C19代谢的替代药物。主要不经CYP2C19代谢的TCA包括仲胺类药物去甲替林和地昔帕明。对于叔胺类药物，建议将推荐起始剂量减少50%。利用治疗药物监测来指导剂量调整。根据观察到的临床反应、症状改善和副作用（如有）最小化（或达到最小）来调整剂量。</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card detail-card mb-3">
+          <div class="card-header d-flex justify-content-between align-items-center py-3">
+            <div>
+              <span class="badge bg-secondary">痛风、高尿酸血症</span>
+              <span class="ms-2 fw-bold fs-5">别嘌呤醇</span>
+            </div>
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-med-1" aria-expanded="false" aria-controls="collapse-med-1">查看详情</button>
+          </div>
+          <div id="collapse-med-1" class="collapse">
+            <div class="card-body">
+              <div class="mb-3">
+                <div class="d-flex">
+                  <strong class="me-3">适应症/靶向疾病:</strong>
+                  <span class="tab-spacer"></span>
+                  <span>痛风、高尿酸血症</span>
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <div class="d-flex align-items-center">
+                  <strong class="me-3">相关基因:</strong>
+                  <span class="tab-spacer"></span>
+                  <div class="d-flex flex-wrap">
+                    
+                      
+                      <a href="#" class="gene-badge text-decoration-none me-2 mb-2" onclick="showGeneInfo({name: 'ABCG2', variant: 'rs2231142', phenotype: '功能下降'})">
+                        <span>ABCG2</span>
+                        <span class="small ms-1">rs2231142</span>
+                        <span class="small ms-1 text-muted">(功能下降)</span>
+                      </a>
+                      
+                    
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <div class="d-flex">
+                  <strong class="me-3">用药建议:</strong>
+                  <span class="tab-spacer"></span>
+                  <span>别嘌呤醇的有效性降低，意味着需要更高的剂量。ABCG2基因变异会降低肾脏和肠道对尿酸的排泄，这意味着需要更强地抑制别嘌呤醇的尿酸生成，才能达到所需的尿酸浓度。</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card detail-card mb-3">
+          <div class="card-header d-flex justify-content-between align-items-center py-3">
+            <div>
+              <span class="badge bg-secondary">抑郁症、强迫症、惊恐障碍、创伤后应激障碍、社交焦虑症和经前烦躁障碍</span>
+              <span class="ms-2 fw-bold fs-5">贝组替芬</span>
+            </div>
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-med-2" aria-expanded="false" aria-controls="collapse-med-2">查看详情</button>
+          </div>
+          <div id="collapse-med-2" class="collapse">
+            <div class="card-body">
+              <div class="mb-3">
+                <div class="d-flex">
+                  <strong class="me-3">适应症/靶向疾病:</strong>
+                  <span class="tab-spacer"></span>
+                  <span>抑郁症、强迫症、惊恐障碍、创伤后应激障碍、社交焦虑症和经前烦躁障碍</span>
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <div class="d-flex align-items-center">
+                  <strong class="me-3">相关基因:</strong>
+                  <span class="tab-spacer"></span>
+                  <div class="d-flex flex-wrap">
+                    
+                      
+                      <a href="#" class="gene-badge text-decoration-none me-2 mb-2" onclick="showGeneInfo({name: 'CYP2C19', variant: '*3/*3', phenotype: '代谢减慢'})">
+                        <span>CYP2C19</span>
+                        <span class="small ms-1">*3/*3</span>
+                        <span class="small ms-1 text-muted">(代谢减慢)</span>
+                      </a>
+                      
+                    
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <div class="d-flex">
+                  <strong class="me-3">用药建议:</strong>
+                  <span class="tab-spacer"></span>
+                  <span>会导致更高的全身浓度，并可能导致更高的不良反应风险（贫血、缺氧）。考虑使用替代药物。如必须使用，建议将推荐起始剂量减少50%。利用治疗药物监测来指导剂量调整。根据观察到的临床反应、症状改善和副作用（如有）最小化（或达到最小）来调整剂量。</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card detail-card mb-3">
+          <div class="card-header d-flex justify-content-between align-items-center py-3">
+            <div>
+              <span class="badge bg-secondary">艾滋病</span>
+              <span class="ms-2 fw-bold fs-5">依法韦仑</span>
+            </div>
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-med-3" aria-expanded="false" aria-controls="collapse-med-3">查看详情</button>
+          </div>
+          <div id="collapse-med-3" class="collapse">
+            <div class="card-body">
+              <div class="mb-3">
+                <div class="d-flex">
+                  <strong class="me-3">适应症/靶向疾病:</strong>
+                  <span class="tab-spacer"></span>
+                  <span>艾滋病</span>
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <div class="d-flex align-items-center">
+                  <strong class="me-3">相关基因:</strong>
+                  <span class="tab-spacer"></span>
+                  <div class="d-flex flex-wrap">
+                    
+                      
+                      <a href="#" class="gene-badge text-decoration-none me-2 mb-2" onclick="showGeneInfo({name: 'CYP2B6', variant: '*1/*1', phenotype: '代谢正常'})">
+                        <span>CYP2B6</span>
+                        <span class="small ms-1">*1/*1</span>
+                        <span class="small ms-1 text-muted">(代谢正常)</span>
+                      </a>
+                      
+                    
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <div class="d-flex">
+                  <strong class="me-3">用药建议:</strong>
+                  <span class="tab-spacer"></span>
+                  <span>依法韦仑的代谢主要通过CYPP2B6进行，因此在CYPP2B6正常代谢的患者中，推荐的起始剂量可以使用标准方案。</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card detail-card mb-3">
+          <div class="card-header d-flex justify-content-between align-items-center py-3">
+            <div>
+              <span class="badge bg-secondary">预防和治疗血栓栓塞性疾病</span>
+              <span class="ms-2 fw-bold fs-5">苯丙香豆素</span>
+            </div>
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-med-4" aria-expanded="false" aria-controls="collapse-med-4">查看详情</button>
+          </div>
+          <div id="collapse-med-4" class="collapse">
+            <div class="card-body">
+              <div class="mb-3">
+                <div class="d-flex">
+                  <strong class="me-3">适应症/靶向疾病:</strong>
+                  <span class="tab-spacer"></span>
+                  <span>预防和治疗血栓栓塞性疾病</span>
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <div class="d-flex align-items-center">
+                  <strong class="me-3">相关基因:</strong>
+                  <span class="tab-spacer"></span>
+                  <div class="d-flex flex-wrap">
+                    
+                      
+                      <a href="#" class="gene-badge text-decoration-none me-2 mb-2" onclick="showGeneInfo({name: 'VKORC1', variant: 'rs9923231', phenotype: '容易过敏'})">
+                        <span>VKORC1</span>
+                        <span class="small ms-1">rs9923231</span>
+                        <span class="small ms-1 text-muted">(容易过敏)</span>
+                      </a>
+                      
+                    
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <div class="d-flex">
+                  <strong class="me-3">用药建议:</strong>
+                  <span class="tab-spacer"></span>
+                  <span>代谢极慢的患者可能会出现药物积累，增加不良反应风险。建议将推荐起始剂量减少50%并更频繁地进行检测，如有不适，应及时停止用药。</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      
+    </div>
+    
+    <!-- 报告页脚 -->
+    <div class="report-section report-footer" id="report-footer-section">
+      <div class="mb-4">
+        <h3 class="section-title">
+          <i class="fas fa-exclamation-circle me-2"></i> 报告免责声明
+        </h3>
+        <div class="alert alert-warning">
+          <p>本健康报告由智绘组学PanAIOmics提供。报告中的发现基于当前科学研究，但个体健康状况受多种因素影响。基因组数据反应终身的疾病易感风险和药物代谢特征，蛋白质组数据提供了实时的状态信息。</p>
+          <p>请注意：</p>
+          <ul>
+            <li>所有健康决策应在医疗专业人士指导下进行</li>
+            <li>蛋白质分析反映特定时间点的信息，可能随时间变化</li>
+            <li>环境、生活方式和其他因素也会显著影响健康风险</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="mb-3">
+        <h3 class="section-title">
+          <i class="fas fa-lightbulb me-2"></i> 后续建议
+        </h3>
+        <div class="alert alert-info">
+          <p>基于您的检测结果，我们建议：</p>
+          <ol>
+            <li>与您的医生分享此报告结果并讨论个性化预防策略</li>
+            <li>针对高风险项目，考虑进行定期筛查和随访</li>
+            <li>保持健康生活方式，包括均衡饮食、规律运动和充足休息</li>
+            <li>每6-12个月更新您的蛋白质组检测，监测健康变化</li>
+          </ol>
+        </div>
+      </div>
+      <hr>
+      
+      <div class="d-flex justify-content-between align-items-center mt-4">
+        <div>
+          <p class="mb-0"><strong>智绘组学PanAIOmics</strong></p>
+          <p class="small text-muted mb-0">版本 <span>0.1.9</span></p>
+        </div>
+        <div class="text-end">
+          <p class="mb-0">报告编号: <strong>GEN-20250907-042</strong></p>
+            
+
+              生成日期: <span>2025-09-07</span>| 审核人员: 
+        <span>
+          ZGS-B01254
+        </span>
+      </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+  <!-- 引入JsBarcode和QRCode库 -->
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+  <!-- 引入Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- 引入自定义脚本 -->
+  <script src="/js/main.js"></script>
+</body>
+</html>
