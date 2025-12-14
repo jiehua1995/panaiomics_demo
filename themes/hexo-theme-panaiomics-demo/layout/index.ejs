@@ -75,7 +75,7 @@
     <!-- 祖源分析部分 -->
     <div class="report-section" id="ancestry-section">
       <h3 class="section-title">
-        <i class="fas fa-dna me-2"></i> 祖源分析
+        <i class="fas fa-dna me-2"></i> 基于全基因组数据的祖源分析
       </h3>
       
       <div class="alert alert-info mb-4">
@@ -85,7 +85,7 @@
           </div>
           <div>
             <h5 class="alert-heading">您的基因组起源</h5>
-            <p class="mb-0">祖源分析利用基因组中的特征变异位点，将您的基因组与全球参考人群数据库进行比较，确定您的遗传祖源构成。这些信息可用于了解您的历史迁徙背景，但不代表您的文化身份认同。</p>
+            <p class="mb-0">祖源分析利用全基因组中的特征变异位点，将您的基因组与全球参考人群数据库进行比较，确定您的遗传祖源构成。数据信息覆盖度远超Y染色体STR位点，代表了您的全基因组的遗传信息来源。这些信息可用于了解您的历史迁徙背景，但不代表您的文化身份认同。</p>
           </div>
         </div>
       </div>
@@ -235,7 +235,7 @@
                   <div class="risk-indicator <%= disease.genomic && disease.genomic.risk_score < 0.2 ? 'risk-very-low' : disease.genomic && disease.genomic.risk_score >= 0.2 && disease.genomic.risk_score < 0.4 ? 'risk-low' : disease.genomic && disease.genomic.risk_score >= 0.4 && disease.genomic.risk_score < 0.6 ? 'risk-medium' : disease.genomic && disease.genomic.risk_score >= 0.6 && disease.genomic.risk_score < 0.8 ? 'risk-high' : 'risk-very-high' %>">
                     <i class="fas <%= disease.genomic && disease.genomic.risk_score < 0.2 ? 'fa-smile' : disease.genomic && disease.genomic.risk_score >= 0.2 && disease.genomic.risk_score < 0.4 ? 'fa-check' : disease.genomic && disease.genomic.risk_score >= 0.4 && disease.genomic.risk_score < 0.6 ? 'fa-equals' : disease.genomic && disease.genomic.risk_score >= 0.6 && disease.genomic.risk_score < 0.8 ? 'fa-exclamation' : 'fa-exclamation-triangle' %>"></i>
                   </div>
-                  <span class="fw-bold">基因组易感性:</span>
+                  <span class="fw-bold">终生遗传风险:</span>
                   <span class="ms-2">
                     <% if (disease.genomic && disease.genomic.risk_score < 0.2) { %>极不易感
                     <% } else if (disease.genomic && disease.genomic.risk_score >= 0.2 && disease.genomic.risk_score < 0.4) { %>不易感
@@ -250,7 +250,7 @@
                   <div class="risk-indicator <%= disease.proteomic && disease.proteomic.risk_score < 0.2 ? 'risk-very-low' : disease.proteomic && disease.proteomic.risk_score >= 0.2 && disease.proteomic.risk_score < 0.4 ? 'risk-low' : disease.proteomic && disease.proteomic.risk_score >= 0.4 && disease.proteomic.risk_score < 0.6 ? 'risk-medium' : disease.proteomic && disease.proteomic.risk_score >= 0.6 && disease.proteomic.risk_score < 0.8 ? 'risk-high' : 'risk-very-high' %>">
                     <i class="fas <%= disease.proteomic && disease.proteomic.risk_score < 0.2 ? 'fa-thumbs-up' : disease.proteomic && disease.proteomic.risk_score >= 0.2 && disease.proteomic.risk_score < 0.4 ? 'fa-check' : disease.proteomic && disease.proteomic.risk_score >= 0.4 && disease.proteomic.risk_score < 0.6 ? 'fa-equals' : disease.proteomic && disease.proteomic.risk_score >= 0.6 && disease.proteomic.risk_score < 0.8 ? 'fa-exclamation' : 'fa-exclamation-triangle' %>"></i>
                   </div>
-                  <span class="fw-bold">蛋白质组风险:</span>
+                  <span class="fw-bold">当前健康状态:</span>
                   <span class="ms-2">
                     <% if (disease.proteomic && disease.proteomic.risk_score < 0.2) { %>低风险
                     <% } else if (disease.proteomic && disease.proteomic.risk_score >= 0.2 && disease.proteomic.risk_score < 0.4) { %>中低风险
@@ -410,28 +410,28 @@
       <% if (site.data.medications && site.data.medications.length > 0) { %>
         <% site.data.medications.forEach(function(med, index) { %>
         <div class="card detail-card mb-3">
-          <div class="card-header d-flex justify-content-between align-items-center py-3">
-            <div>
-              <span class="badge bg-secondary"><%= med.target_disease %></span>
-              <span class="ms-2 fw-bold fs-5"><%= med.name %></span>
+          <div class="card-header d-flex justify-content-between align-items-start py-3 gap-3">
+            <div class="medication-header-content">
+              <div class="mb-2">
+                <span class="badge bg-secondary medication-disease-badge"><%= med.target_disease %></span>
+              </div>
+              <div class="medication-name"><%= med.name %></div>
             </div>
-            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-med-<%= index %>" aria-expanded="false" aria-controls="collapse-med-<%= index %>">查看详情</button>
+            <button class="btn btn-primary flex-shrink-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-med-<%= index %>" aria-expanded="false" aria-controls="collapse-med-<%= index %>">查看详情</button>
           </div>
           <div id="collapse-med-<%= index %>" class="collapse">
             <div class="card-body">
               <div class="mb-3">
-                <div class="d-flex">
-                  <strong class="me-3">适应症/靶向疾病:</strong>
-                  <span class="tab-spacer"></span>
+                <div class="d-flex flex-column flex-md-row">
+                  <strong class="me-md-3 mb-2 mb-md-0 flex-shrink-0">适应症/靶向疾病:</strong>
                   <span><%= med.target_disease %></span>
                 </div>
               </div>
               
               <div class="mb-3">
-                <div class="d-flex align-items-center">
-                  <strong class="me-3">相关基因:</strong>
-                  <span class="tab-spacer"></span>
-                  <div class="d-flex flex-wrap">
+                <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center">
+                  <strong class="me-3 mb-2 mb-md-0 flex-shrink-0">相关基因:</strong>
+                  <div class="d-flex flex-wrap w-100">
                     <% if (med.related_genes && med.related_genes.length > 0) { %>
                       <% med.related_genes.forEach(function(gene) { %>
                       <a href="#" class="gene-badge text-decoration-none me-2 mb-2" onclick="showGeneInfo({name: '<%= gene.name %>', variant: '<%= gene.variant %>', phenotype: '<%= gene.phenotype %>'})">
@@ -446,9 +446,8 @@
               </div>
               
               <div>
-                <div class="d-flex">
-                  <strong class="me-3">用药建议:</strong>
-                  <span class="tab-spacer"></span>
+                <div class="d-flex flex-column flex-md-row">
+                  <strong class="me-md-3 mb-2 mb-md-0 flex-shrink-0">用药建议:</strong>
                   <span><%= med.advice %></span>
                 </div>
               </div>

@@ -189,6 +189,83 @@ body {
   margin-bottom: 5px;
   display: inline-block;
   color: #495057;
+  word-break: break-word;
+  max-width: 100%;
+}
+
+/* 药物基因组学部分的响应式样式 */
+#medication-section .card-body > div {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+#medication-section strong {
+  white-space: nowrap;
+}
+
+/* 药物卡片头部样式 */
+.medication-header-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.medication-disease-badge {
+  font-size: 0.95rem;
+  padding: 0.4em 0.8em;
+  white-space: normal;
+  line-height: 1.4;
+}
+
+.medication-name {
+  font-weight: 600;
+  font-size: 1.15rem;
+  line-height: 1.4;
+  color: #2c3e50;
+}
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+  #medication-section .flex-column {
+    align-items: flex-start !important;
+  }
+  
+  #medication-section strong {
+    margin-bottom: 0.5rem;
+  }
+  
+  .gene-badge {
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    margin-right: 4px;
+    margin-bottom: 4px;
+  }
+  
+  .report-container {
+    padding: 10px;
+  }
+  
+  .report-section {
+    padding: 15px;
+  }
+  
+  .medication-disease-badge {
+    font-size: 0.85rem;
+    padding: 0.35em 0.7em;
+  }
+  
+  .medication-name {
+    font-size: 1rem;
+  }
+  
+  #medication-section .card-header {
+    flex-direction: column;
+    align-items: stretch !important;
+  }
+  
+  #medication-section .card-header .btn {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
 }
 
 .footer {

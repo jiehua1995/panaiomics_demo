@@ -4,9 +4,9 @@
 site:
   title: PanAiOmics健康报告
   subtitle: 多组学整合健康报告演示版
-  description: 为了便于展示核心功能与可视化效果，本演示报告仅呈现部分疾病与药物信息。完整版本将覆盖上百种疾病与药物，能够实现临床级别的多组学健康评估与用药指导。
+  description: 为了便于展示核心功能与可视化效果，本演示报告仅呈现部分疾病与药物信息。完整版本可覆盖上百种疾病与药物，能够实现临床级别的多组学健康评估与用药指导。
   keywords: PanAIOmics, 评估报告, 多组学, 组学分析
-  author: 智绘组学PanAIOmics
+  author: 智绘组学 PanAIOmics
   language: zh-CN
   logo: /images/logo.png
 
